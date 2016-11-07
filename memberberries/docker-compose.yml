@@ -1,0 +1,7 @@
+version: '2'
+
+services:
+   rt-bot-memberberries:
+    build: .
+    ports:
+    - "8080:8080"
