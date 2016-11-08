@@ -1,0 +1,214 @@
+{
+	"ImportPath": "github.com/umputun/rt-bot/search-bot",
+	"GoVersion": "go1.7",
+	"GodepVersion": "v74",
+	"Deps": [
+		{
+			"ImportPath": "code.google.com/p/cascadia",
+			"Comment": "null-31",
+			"Rev": "'5d796540e3cb93ea0556c897e6a3c7690f614d35'"
+		},
+		{
+			"ImportPath": "github.com/PuerkitoBio/goquery",
+			"Comment": "v0.3.2-69-g4cf64c5",
+			"Rev": "4cf64c51f7e80d56d9ae2ffe7d684d3dd5dbd5d0"
+		},
+		{
+			"ImportPath": "github.com/alehano/batch",
+			"Rev": "c8b9d97e49601d4c2424f39534a3012127f45ad3"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/analysis",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/analysis/analyzer/standard",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/analysis/datetime/flexible",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/analysis/datetime/optional",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/analysis/lang/en",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/analysis/token/lowercase",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/analysis/token/porter",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/analysis/token/stop",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/analysis/tokenizer/unicode",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/document",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/index",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/index/store",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/index/store/boltdb",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/index/store/gtreap",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/index/upsidedown",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/mapping",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/numeric",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/registry",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/search",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/search/collector",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/search/facet",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/search/highlight",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/search/highlight/format/html",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/search/highlight/fragmenter/simple",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/search/highlight/highlighter/html",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/search/highlight/highlighter/simple",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/search/query",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/search/scorer",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/bleve/search/searcher",
+			"Comment": "v0.5.0-96-gbcaea08",
+			"Rev": "bcaea084c55f25d843201bb421347311c59a1601"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/go-porterstemmer",
+			"Comment": "v1.0.1-9-g23a2c8e",
+			"Rev": "23a2c8e5cf1f380f27722c6d2ae8896431dc7d0e"
+		},
+		{
+			"ImportPath": "github.com/blevesearch/segment",
+			"Rev": "762005e7a34fd909a84586299f1dd457371d36ee"
+		},
+		{
+			"ImportPath": "github.com/boltdb/bolt",
+			"Comment": "v1.3.0-29-g4b1ebc1",
+			"Rev": "4b1ebc1869ad66568b313d0dc410e2be72670dda"
+		},
+		{
+			"ImportPath": "github.com/golang/protobuf/proto",
+			"Rev": "2bc9827a78f95c6665b5fe0abd1fd66b496ae2d8"
+		},
+		{
+			"ImportPath": "github.com/steveyen/gtreap",
+			"Rev": "0abe01ef9be25c4aedc174758ec2d917314d6d70"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "55a3084c9119aeb9ba2437d595b0a7e9cb635da9"
+		},
+		{
+			"ImportPath": "golang.org/x/net/html",
+			"Rev": "55a3084c9119aeb9ba2437d595b0a7e9cb635da9"
+		},
+		{
+			"ImportPath": "golang.org/x/net/html/atom",
+			"Rev": "55a3084c9119aeb9ba2437d595b0a7e9cb635da9"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "442cd600860ce722f6615730eb008a37a87b13ee"
+		},
+		{
+			"ImportPath": "gopkg.in/robfig/cron.v2",
+			"Comment": "v1-11-gbe2e0b0",
+			"Rev": "be2e0b0deed5a68ffee390b4583a13aff8321535"
+		}
+	]
+}
