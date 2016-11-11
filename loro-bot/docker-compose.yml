@@ -1,0 +1,7 @@
+loro-bot:
+    build: .
+    container_name: loro-bot
+    hostname: loro-bot
+    restart: always
+    ports:
+        - "8080:8080"
