@@ -130,3 +130,15 @@ services:
           options:
               max-size: "10m"
               max-file: "5"
+
+    bots:
+        build: bots
+        container_name: bots-bot
+        hostname: bots-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
