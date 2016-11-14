@@ -6,9 +6,9 @@ define('BOT_NAME', 'Пятиминутка PHP');
 if (isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] === '/info') {
     http_response_code(200);
     print json_encode([
-        'author' => 'Пётр Мязин (https://twitter.com/PetrMyazin)',
+        'author' => 'Пётр Мязин (twitter: PetrMyazin)',
         'info' => 'Если в чате упоминается PHP, то "Пятиминутка PHP" сообщает какой-то интересный и полезный факт об этом языке программирования! База знаний постоянно пополняется!',
-        'commands' => []
+        'commands' => ["php"]
     ]);
     exit();
 }
