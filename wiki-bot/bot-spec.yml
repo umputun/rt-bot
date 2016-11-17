@@ -1,0 +1,20 @@
+bot_name: "wiki-bot"
+
+defaults:
+  username: "test-user"
+  display_name: "Test User"
+
+ignored_commands:
+  - "Ignored message 1"
+  - "Ignored message 2"
+  - "Ignored message 3"
+
+test_cases:
+  - command: "wiki qweasdqwe"
+    result: "I don't know, ask Bobuk!"
+
+  - command: "wiki http"
+    result: "https://ru.wikipedia.org/wiki/HTTP"
+
+  - command: "wiki hello world"
+    result: "https://ru.wikipedia.org/wiki/Hello,_world!"

@@ -46,12 +46,13 @@ public class RtbotController {
             if(!result.isEmpty()){
 
                 rsp.setStatus(HttpStatus.CREATED.value());
-
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("text", result);
                 jsonObject.put("bot", "wiki-bot");
                 return jsonObject.toString();
             } else {
+
+                rsp.setStatus(HttpStatus.CREATED.value());
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("text", "I don't know, ask Bobuk!");
                 jsonObject.put("bot", "wiki-bot");
