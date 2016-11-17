@@ -1,0 +1,14 @@
+bot_name: "5minphp-bot"
+bot_display_name: "Пятиминутка PHP"
+
+ignored_commands:
+  - "Привет"
+  - "Как дела?"
+  - "Один два три"
+
+test_cases:
+  - command: "пятиминутка, обновись"
+    result: "^У меня для вас есть свежие факты про PHP."
+
+  - command: "расскажи о php"
+    result: "^.*(PHP)?(php)?.*$"

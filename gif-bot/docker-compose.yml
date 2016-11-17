@@ -1,0 +1,7 @@
+gif-bot:
+    build: .
+    container_name: gif-bot
+    hostname: gif-bot
+    restart: always
+    ports:
+        - "8080:8080"

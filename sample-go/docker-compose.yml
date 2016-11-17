@@ -1,0 +1,7 @@
+sample-go:
+    build: .
+    container_name: sample-go
+    hostname: sample-go
+    restart: always
+    ports:
+        - "8080:8080"

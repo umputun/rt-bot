@@ -1,0 +1,9 @@
+node:
+  build: .
+  ports:
+    - "8080:8080"
+  log_driver: "json-file"
+  log_opt:
+    max-size: "5m"
+    max-file: "10"
+  restart: always

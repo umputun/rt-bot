@@ -5,5 +5,7 @@ namespace memberberries.Services
     public interface IBot
     {
         Answer GetAnswere(Message message);
+
+        About GetAbout();        
     }
 }

@@ -8,7 +8,11 @@ namespace memberberries.Services
         private Regex pattern_en;
         private Regex pattern_ru;
 
-        private const string botname = "MemberBerries";
+        private const string _botname = "MemberBerries";
+
+        private const string _author = "Andrey Popov";
+
+        private const string _info = "Шутливый бот **Вспоминашки** (MemberBerries) по мотивам сериала Южный Парк. Рагирует на фразы вида: `Помните то-то?`";
 
         public Bot()
         {
@@ -23,6 +27,17 @@ namespace memberberries.Services
             );
         }
 
+        public About GetAbout()
+        {
+            return new About {
+                author = _author,
+
+                info = _info,
+
+                commands = null
+            };
+        }
+
         public Answer GetAnswere(Message message)
         {
             var match_en = pattern_en.Match(
@@ -32,7 +47,7 @@ namespace memberberries.Services
             if (match_en.Success) {
                 return new Answer{
                     text = "Oh I member...",
-                    bot = botname
+                    bot = _botname
                 };
             }
 
@@ -43,7 +58,7 @@ namespace memberberries.Services
             if (match_ru.Success) {
                 return new Answer{
                     text = "О! Я помню...",
-                    bot = botname
+                    bot = _botname
                 };
             }
 

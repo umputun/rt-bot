@@ -1,0 +1,4 @@
+rt-repl-bot:
+  build: .
+  ports:
+    - "8080:8080"

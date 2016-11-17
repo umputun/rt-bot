@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  karma-bot-storage:
+    image: redis:3-alpine
+    container_name: karma-bot-storage
+    hostname: karma-bot-storage
+    restart: always
+
+  karma-bot:
+      build: .
+      container_name: karma-bot
+      hostname: karma-bot
+      restart: always
+      ports:
+          - "8080:8080"
+      environment:
+        - REDIS_HOST=karma-bot-storage
+      depends_on:
+        - karma-bot-storage

@@ -1,0 +1,7 @@
+sovet-bot:
+    build: .
+    container_name: sovet-bot
+    hostname: sovet-bot
+    restart: sovet-bot
+    ports:
+        - "8080:8080"

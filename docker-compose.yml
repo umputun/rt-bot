@@ -1,0 +1,262 @@
+version: '2'
+services:
+
+    nginx:
+        image: umputun/nginx-le:latest
+        container_name: nginx-bot
+        hostname: nginx-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+        volumes:
+            - ./etc/ssl:/etc/nginx/ssl
+            - ./etc/nginx.conf:/etc/nginx/service.conf
+
+        ports:
+            - "80:80"
+            - "443:443"
+
+        environment:
+            - TZ=America/Chicago
+            - LETSENCRYPT=true
+            - LE_EMAIL=umputun@gmail.com
+            - LE_FQDN=bot.radio-t.com
+
+        depends_on:
+            - hello
+            - memberberries
+            - wiki-bot
+            - search-bot
+            - noter-bot
+            - repl-bot
+            - 5minphp-bot
+            - karma-bot
+            - loro-bot
+            - guido-bot
+            - giphy-bot
+            - gif-bot
+            - stat-bot
+            - anek-bot
+            - grabpage-bot
+
+    hello:
+        build: hello
+        container_name: hello-bot
+        hostname: hello-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    memberberries:
+        build: memberberries
+        container_name: memberberries-bot
+        hostname: memberberries-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    wiki-bot:
+        build: wiki-bot
+        container_name: wiki-bot
+        hostname: wiki-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    search-bot:
+        build: search-bot
+        container_name: search-bot
+        hostname: search-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    noter-bot:
+        build: noter-bot
+        container_name: noter-bot
+        hostname: noter-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    repl-bot:
+        build: rt-repl-bot
+        container_name: repl-bot
+        hostname: repl-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    stat-bot:
+        build: stat-bot
+        container_name: stat-bot
+        hostname: stat-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    gif-bot:
+        build: gif-bot
+        container_name: gif-bot
+        hostname: gif-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    giphy-bot:
+        build: giphy-bot
+        container_name: giphy-bot
+        hostname: giphy-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    5minphp-bot:
+        build: 5minphp-bot
+        container_name: 5minphp-bot
+        hostname: 5minphp-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    loro-bot:
+        build: loro-bot
+        container_name: loro-bot
+        hostname: loro-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    brackets-bot:
+        build: brackets-bot
+        container_name: brackets-bot
+        hostname: brackets-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    guido-bot:
+        build: guido-bot
+        container_name: guido-bot
+        hostname: guido-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    karma-bot-storage:
+      image: redis:3-alpine
+      container_name: karma-bot-storage
+      hostname: karma-bot-storage
+      restart: always
+      logging:
+        driver: json-file
+        options:
+          max-size: "10m"
+          max-file: "5"
+
+    karma-bot:
+        build: karma-bot
+        container_name: karma-bot
+        hostname: karma-bot
+        restart: always
+        environment:
+          - REDIS_HOST=karma-bot-storage
+        depends_on:
+          - karma-bot-storage
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    sovet-bot:
+        build: sovet-bot
+        container_name: sovet-bot
+        hostname: sovet-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    anek-bot:
+        build: anek-bot
+        container_name: anek-bot
+        hostname: anek-bot
+        restart: always
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    grabpage-bot:
+        build: grabpage-bot
+        container_name: grabpage-bot
+        hostname: grabpage-bot
+        restart: always
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"

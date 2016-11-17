@@ -1,0 +1,37 @@
+sudo: required
+
+language: python
+
+python:
+  - "3.5"
+
+services:
+  - docker
+
+env:
+  DOCKER_COMPOSE_VERSION: 1.8.1
+  SSL_KEY: nginx.key
+  SSL_CERT: nginx.crt
+
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=Test/L=Test/O=Dis/CN=localhost" -keyout "etc/ssl/${SSL_KEY}" -out "etc/ssl/${SSL_CERT}"
+
+install:
+  - pip install -r ci/requirements.txt
+  - sed -i "s|LETSENCRYPT=true|LETSENCRYPT=false\\n            - SSL_KEY=${SSL_KEY}\\n            - SSL_CERT=${SSL_CERT}|g" docker-compose.yml
+  - docker-compose build
+
+before_script:
+  - docker-compose up -d
+
+script:
+  - echo "Waiting nginx-bot to launch on nginx-bot:443..."
+  - while ! wget --no-check-certificate https://localhost/ping &> /dev/null; do sleep 1; done
+  - BOT_BASE_URL="https://localhost" python ci/run_bot_tests.py .
+
+after_script:
+  - docker_compose down

@@ -1,0 +1,7 @@
+grabpage-bot:
+    build: .
+    container_name: grabpage-bot
+    hostname: grabpage-bot
+    restart: always
+    ports:
+        - "8080:8080"

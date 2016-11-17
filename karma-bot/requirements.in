@@ -1,0 +1,5 @@
+Flask
+redis
+mockredispy
+gunicorn
+flake8

@@ -1,0 +1,7 @@
+guido-bot:
+    build: .
+    container_name: guido-bot
+    hostname: guido-bot
+    restart: always
+    ports:
+        - "8080:8080"

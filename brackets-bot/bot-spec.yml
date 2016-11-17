@@ -1,0 +1,22 @@
+defaults:
+  username: "test"
+  display_name: "Test"
+
+bot_name: "brackets-bot"
+
+ignored_commands:
+  - "(( Привет ))"
+  - "{[Привет]}"
+  - "(((Привет)))"
+
+test_cases:
+  - command: "(((Привет))"
+    result: "\\)\\nЗакрывай скобки, @test"
+
+  - command: "[((Привет))"
+    result: "]\\nЗакрывай скобки, @test"
+
+  - command:
+      text: "{{((Привет)"
+      username: "alex"
+    result: "\\)}}\\nЗакрывай скобки, @alex"

@@ -1,0 +1,7 @@
+giphy-bot:
+    build: .
+    container_name: giphy-bot
+    hostname: giphy-bot
+    restart: always
+    ports:
+        - "8080:8080"

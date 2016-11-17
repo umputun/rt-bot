@@ -1,0 +1,7 @@
+search-bot:
+    build: .
+    container_name: search-bot
+    hostname: search-bot
+    restart: always
+    ports:
+        - "8080:8080"

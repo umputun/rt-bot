@@ -1,0 +1,7 @@
+5minphp-bot:
+    build: .
+    container_name: 5minphp-bot
+    hostname: 5minphp-bot
+    restart: always
+    ports:
+        - "8080:8080"

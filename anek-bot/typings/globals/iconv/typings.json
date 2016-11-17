@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/7ecabec1bf754c8fac3b1de8b5bb91f7d6d45380/iconv/iconv.d.ts",
+    "raw": "registry:dt/iconv#2.1.11+20160417151847",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/7ecabec1bf754c8fac3b1de8b5bb91f7d6d45380/iconv/iconv.d.ts"
+  }
+}
