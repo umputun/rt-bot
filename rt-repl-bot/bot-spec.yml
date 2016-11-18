@@ -1,4 +1,4 @@
-bot_name: "rt-repl-bot"
+bot_name: "repl-bot"
 bot_display_name: "Clojure REPL bot"
 
 ignored_commands:
