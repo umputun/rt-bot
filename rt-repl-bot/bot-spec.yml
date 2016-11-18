@@ -8,8 +8,8 @@ ignored_commands:
 
 test_cases:
   - command: "clj> (+ 1 1)"
-    result: "2"
+    result: "```\n2\n```"
   - command: "clj>"
-    result: "EOF while reading"
+    result: "```\nEOF while reading\n```"
   - command: "clj> (def var1 5)"
-    result: "#'sandbox[0-9]{1,4}/var1"
+    result: "```\n#'sandbox[0-9]{1,4}/var1\n```"
