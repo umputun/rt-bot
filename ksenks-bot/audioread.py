@@ -15,38 +15,6 @@
 # Modified for in-memory convertion with ffmpeg.
 # Compatible with python 2 and python 3.
 
-
-"""Decode audio files."""
-
-class DecodeError(Exception):
-    """The base exception class for all decoding errors raised by this
-    package.
-    """
-
-
-class NoBackendError(DecodeError):
-    """The file could not be decoded by any backend. Either no backends
-    are available or each available backend failed to decode the file.
-    """
-
-
-def decode(audio):
-    """Given a file-like object containing encoded audio data, create an
-    audio file object that produces its *raw* data.
-    """
-    try:
-        return FFmpegAudioFile(audio=audio)
-    except DecodeError:
-        pass
-
-    # All backends failed!
-    raise NoBackendError()
-
-
-"""Read audio data using the ffmpeg command line tool via its standard
-output.
-"""
-
 import sys
 import subprocess
 import re
@@ -61,6 +29,31 @@ except ImportError:
 
 
 COMMANDS = ('ffmpeg', 'avconv')
+
+
+class DecodeError(Exception):
+    """The base exception class for all decoding errors raised by this
+    package.
+    """
+
+
+class NoBackendError(DecodeError):
+    """The file could not be decoded by any backend. Either no backends
+    are available or each available backend failed to decode the file.
+    """
+
+
+def decode(audio, ffmpeg_args=None):
+    """Given a file-like object containing encoded audio data, create an
+    audio file object that produces its *raw* data.
+    """
+    try:
+        return FFmpegAudioFile(audio=audio, ffmpeg_args=ffmpeg_args)
+    except DecodeError:
+        pass
+
+    # All backends failed!
+    raise NoBackendError()
 
 
 class FFmpegError(DecodeError):
@@ -159,7 +152,7 @@ windows_error_mode_lock = threading.Lock()
 
 class FFmpegAudioFile(object):
     """An audio file decoded by the ffmpeg command-line utility."""
-    def __init__(self, filename=None, audio=None, block_size=4096):
+    def __init__(self, filename=None, audio=None, block_size=4096, ffmpeg_args=None):
         """Start decoding an audio file.
 
         Provide either `filename` to read from the filesystem or
@@ -193,9 +186,15 @@ class FFmpegAudioFile(object):
             in_arg = filename if self.from_file else '-'
             self.devnull = open(os.devnull)
             in_stream = self.devnull if self.from_file else subprocess.PIPE
+            if type(ffmpeg_args) == str:
+                ffmpeg_args = ffmpeg_args.split()
+            if ffmpeg_args:
+                args = ['-i', in_arg, '-f', 's16le'] + ffmpeg_args + ['-']
+            else:
+                args = ['-i', in_arg, '-f', 's16le', '-']
             self.proc = popen_multiple(
                 COMMANDS,
-                ['-i', in_arg, '-f', 's16le', '-'],
+                args,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 stdin=in_stream,

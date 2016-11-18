@@ -1,34 +1,40 @@
 import asyncio
-import io
+import hashlib
 import json.decoder
-import pickle
-import struct
-from os.path import isfile
-from time import time
-import aiohttp
-import numpy as np
-from aiohttp import web
-from scipy import signal
-from sklearn import svm
-import audioread
-import pytz
+import logging
 from datetime import datetime
+from time import time
 
+import aiohttp
+import audio
+import pytz
+from aiohttp import web
+from log_handler import ArrayHandler
 
 SECS_BEFORE_SILENT = 1 * 60
 SECS_BEFORE_SLEEP = 5 * 60
 DEFAULT_URL = 'http://stream.radio-t.com/'
 STREAM_URL = DEFAULT_URL
 
-DEBUG = True
+DEBUG_COMMANDS = True
 DEBUG_IGNORE_TIME_UNTIL = 0
 DEBUG_RESET_FLAG = False
 
-PROBABILITY = 0.85
+DEFAULT_PROBABILITY = 0.95
+PROBABILITY = DEFAULT_PROBABILITY
 
 last_detects = []
 last_ksenks_timestamp = 0
-svm_state = None
+svm_model = None
+
+last_logs = ArrayHandler()
+logging.basicConfig(format='%(asctime)-15s %(levelname)-8s %(message)s', level=logging.INFO,
+                    datefmt="%Y-%m-%d %H:%M:%S", handlers=[logging.StreamHandler(), last_logs])
+log = logging.getLogger()
+
+# disable info logging for http connects
+aiohttp_logger = logging.getLogger('aiohttp')
+aiohttp_logger.setLevel(logging.WARNING)
 
 
 def minutes_word(minutes):
@@ -40,14 +46,25 @@ def minutes_word(minutes):
     return word
 
 
-async def info(request):
+def hours_word(hours):
+    word = 'часов'
+    if 11 <= hours <= 14:
+        pass
+    if hours % 10 == 1:
+        word = 'час'
+    elif hours % 10 in [2, 3, 4]:
+        word = 'часа'
+    return word
+
+
+async def http_info(request):
     data = {'author': 'strayge',
             'info': 'Выводит время с момента последней реплики Ксюши',
             'commands': ['Ксюша!', 'ksenks!']}
     return web.json_response(data)
 
 
-async def event(request):
+async def http_event(request):
     try:
         input_json = await request.json()
     except json.decoder.JSONDecodeError:
@@ -56,43 +73,73 @@ async def event(request):
     # input_username = input_json.get('username')
     # input_displayname = input_json.get('display_name')
 
-    if DEBUG:
-        global STREAM_URL, last_ksenks_timestamp, DEBUG_IGNORE_TIME_UNTIL
-        global DEBUG_RESET_FLAG, DEFAULT_URL, last_detects, PROBABILITY
+    valid_key = False
+    if DEBUG_COMMANDS:
+        input_key = input_json.get('key')
+        if input_key:
+            calced_hash = hashlib.new('sha256', str(input_key).encode('utf-8', errors='ignore')).hexdigest()
+            predefined_hash = 'a49f6ea4bc8fd77cfa1f02ef1c2e0f6a37970ff964104982b3823e8fc825e971'
+            if calced_hash == predefined_hash:
+                valid_key = True
+
+    if DEBUG_COMMANDS and valid_key:
+        global STREAM_URL, DEBUG_IGNORE_TIME_UNTIL, DEBUG_RESET_FLAG
+        global PROBABILITY, last_ksenks_timestamp
+
         set_away_secs = input_json.get('set_away')
         set_url = input_json.get('set_url')
         get_status = input_json.get('status')
         set_reset = input_json.get('reset')
         set_probability = input_json.get('probability')
+        set_ignoretime = input_json.get('ignoretime')
+        get_log = input_json.get('showlog')
+
         if set_away_secs:
             secs_away = int(set_away_secs)
+            log.info('Someone changed last_ksenks_timestamp to %i in past' % secs_away)
             if secs_away == 0:
                 last_ksenks_timestamp = 0
             else:
                 last_ksenks_timestamp = time() - secs_away
             return web.json_response({'text': 'Ок!'})
+
         if set_url:
+            log.info('Someone changed stream_url (and 1 hour of ignoring stream time) to %s' % str(set_url))
             STREAM_URL = str(set_url)
             DEBUG_IGNORE_TIME_UNTIL = time() + 3600
             return web.json_response({'text': 'Ок!'})
+
+        if set_ignoretime:
+            log.info('Someone setted to ignoring stream time for 1 hour')
+            DEBUG_IGNORE_TIME_UNTIL = time() + 3600
+            return web.json_response({'text': 'Ок!'})
+
         if get_status is not None:
             return web.json_response({'url': STREAM_URL,
                                       'last_timestamp': last_ksenks_timestamp,
                                       'ignore_time_until': DEBUG_IGNORE_TIME_UNTIL,
-                                      'reeset_flag': DEBUG_RESET_FLAG,
+                                      'reset_flag': DEBUG_RESET_FLAG,
                                       'last_detects': last_detects,
-                                      'probability': PROBABILITY,})
+                                      'probability': PROBABILITY})
+
         if set_reset is not None:
+            log.info('Someone resetted settings')
             STREAM_URL = DEFAULT_URL
             DEBUG_IGNORE_TIME_UNTIL = 0
             DEBUG_RESET_FLAG = True
+            PROBABILITY = DEFAULT_PROBABILITY
             return web.json_response({'text': 'Ок!'})
+
         if set_probability:
-            if float(set_probability) > 0.5 and float(set_probability) < 1:
+            if 0.5 < float(set_probability) < 1:
                 PROBABILITY = float(set_probability)
+                log.info('Someone changed probability %f' % PROBABILITY)
                 return web.json_response({'text': 'Ок!'})
             else:
                 return web.json_response({'text': 'Fail!'})
+
+        if get_log:
+            return web.json_response({'log': last_logs.logs()})
 
     if not input_text:
         return web.Response(status=417)
@@ -110,186 +157,99 @@ async def event(request):
             text = 'Ксюша молчит уже %i %s...' % (minutes, minutes_word(minutes))
         else:
             minutes = (now - last_ksenks_timestamp) // 60
-            text = 'Ксюша заснула %i %s назад :sleeping:' % (minutes, minutes_word(minutes))
+            if minutes < 60:
+                text = 'Ксюша заснула %i %s назад :sleeping:' % (minutes, minutes_word(minutes))
+            else:
+                hours = minutes // 60
+                text = 'Ксюша заснула %i %s назад :sleeping:' % (hours, hours_word(hours))
 
     output = {'text': text, 'bot': 'ksenks-bot'}
     return web.json_response(data=output, status=201)
 
 
-async def processing_audio(web_app):
-    def get_frames_from_flv_or_mp3(chunk, tail=b''):
-        def unpack_uint24_be(x):
-            if len(x) != 3:
-                return 0
-            return 2 ** 16 * x[0] + 2 ** 8 * x[1] + x[2]
+async def process_stream(resp):
+    tail = b''
+    not_processed_frames = []
+    log.info('staring processing stream')
 
-        mp3_frames = []
-        chunk = tail + chunk
-
-        # mp3 frame start marker (first 11 bit setted to 1)
-        if chunk[0] == 0xff and chunk[1] >= 0xe0:
-            current_frame_offset = 0
-            while current_frame_offset != -1 and len(chunk) - current_frame_offset > 10:
-                next_frame_offset = chunk.find(chunk[current_frame_offset: current_frame_offset + 2],
-                                               current_frame_offset + 2)
-                if next_frame_offset == -1:
-                    break
-                frame = chunk[current_frame_offset: next_frame_offset]
-                mp3_frames.append(frame)
-                current_frame_offset = next_frame_offset
-            tail = chunk[current_frame_offset:]
-            return mp3_frames, tail
-
-        # trying detect flv-container
-        signature = struct.unpack('3s', chunk[0:3])[0]
-        # skip flv header
-        if signature == b'FLV':
-            start_pos = 9
-        else:
-            start_pos = 0
-        while len(chunk) - start_pos > 15:
-            packet_type = chunk[start_pos + 4]
-            payload_size = unpack_uint24_be(chunk[start_pos + 5: start_pos + 8])
-            if len(chunk) <= start_pos + 15 + payload_size:
+    while True:
+        if DEBUG_COMMANDS:
+            global DEBUG_RESET_FLAG
+            if DEBUG_RESET_FLAG:
+                log.info('Stream closed by reset command')
+                DEBUG_RESET_FLAG = False
+                resp.close()
                 break
-            if packet_type == 8:
-                frame = chunk[start_pos + 16: start_pos + 15 + payload_size]
-                mp3_frames.append(frame)
-            start_pos = start_pos + 15 + payload_size
-        tail = chunk[start_pos:]
-        return mp3_frames, tail
 
-    def get_pcm_from_frames(all_frames):
-        input_data = io.BytesIO()
-        for frame in all_frames:
-            input_data.write(frame)
-        input_data.seek(0)
-        try:
-            f_convert = audioread.decode(input_data)
-        except:
-            return b''
-        full_pcm = b''
-        for pcm in f_convert:
-            full_pcm += pcm
-        f_convert.close()
-        input_data.close()
-        return full_pcm
+        stream_chunk = await resp.content.read(65536)
+        if not stream_chunk:
+            log.warn("Can't read audio stream")
+            break
 
-    def is_ksenks_on_pcm(pcm):
-        def build_svm():
-            svm_filename = 'svm_model.pickle'
-            np_data_filenames = ['svm_x.npy', 'svm_y.npy']
-            global svm_state
-            if isfile(svm_filename):
-                f_svm = open(svm_filename, 'rb')
-                svm_state = pickle.load(f_svm)
-                f_svm.close()
-            elif isfile(np_data_filenames[0]) and isfile(np_data_filenames[1]):
-                print('%s not found, recalculating' % svm_filename)
-                X = np.load(np_data_filenames[0])
-                Y = np.load(np_data_filenames[1])
-                svm_state = svm.SVC(class_weight='balanced', probability=True)
-                svm_state.fit(X, Y)
-                f_svm = open(svm_filename, 'wb')
-                pickle.dump(svm_state, f_svm)
-                f_svm.close()
-            else:
-                print('no files presents, exitting...')
+        frames, tail = audio.get_frames_from_flv_or_mp3(stream_chunk, tail)
+        not_processed_frames += frames
+
+        if len(not_processed_frames) > 100:
+            pcm = audio.get_pcm_from_frames(not_processed_frames)
+            not_processed_frames = []
+            if not pcm:
+                log.warn('Decoding error')
+                continue
+
+            global svm_model
+            probability, svm_model = audio.probe_ksenks_on_pcm(pcm, svm_model)
+            if not probability:
+                log.error("Can't load SVM model.")
                 exit()
 
-        def gen_featutes_from_pcm(pcm):
-            pcm_array = np.frombuffer(pcm, dtype='<i2')
-            freqs, _, Pxx = signal.spectrogram(pcm_array, fs=44100, nfft=256, window=signal.get_window('hann', 256),
-                                               noverlap=128)
-            avg_freqs_values = np.zeros(len(freqs))
-            min_freqs_values = np.zeros(len(freqs))
-            max_freqs_values = np.zeros(len(freqs))
-            # loop for each freq (in Pxx[i] stored freq's values for each timepoint for freq #i)
-            for i, freq in enumerate(Pxx):
-                avg_freqs_values[i] = np.log10(np.sum(freq) / len(freq)) / np.log10(2 ** 16)
-                if np.max(freq):
-                    max_freqs_values[i] = np.log10(np.max(freq)) / np.log10(2 ** 16)  # scaled = [0,1]
-                if np.min(freq):
-                    min_freqs_values[i] = np.log10(np.min(freq))
-                else:
-                    min_freqs_values[i] = 0
-            features = np.concatenate((avg_freqs_values, min_freqs_values, max_freqs_values))
-            return features
+            if probability >= PROBABILITY:
+                if DEBUG_COMMANDS:
+                    global last_detects
+                    last_detects.append({'time': round(time()), 'probability': probability})
+                    if len(last_detects) > 10:
+                        del (last_detects[0])
 
-        if not svm_state:
-            build_svm()
+                log.info('Ksenks detected, prob = %5.2f %%' % (probability * 100))
+                global last_ksenks_timestamp
+                last_ksenks_timestamp = time()
 
-        features = gen_featutes_from_pcm(pcm)
-        probability = svm_state.predict_proba([features])[0][1]
+    log.info('waiting...')
+    await asyncio.sleep(30)
 
-        if probability >= PROBABILITY:
-            if DEBUG:
-                global last_detects
-                last_detects.append({'time': round(time()), 'probability': probability})
-                if len(last_detects) > 10:
-                    del(last_detects[0])
-                print('Ksenks detected, prob = %5.2f %%' % (probability * 100))
-            return True
-        else:
-            return False
 
+async def main_loop(web_app):
     try:
         async with aiohttp.ClientSession() as session:
             while True:
                 try:
                     current_date = datetime.now(tz=pytz.timezone('Europe/Moscow'))
-                    print('date check')
                     if (current_date.weekday() == 5 and current_date.hour >= 22) or \
-                       (current_date.weekday() == 6 and current_date.hour <= 4) or \
-                       (DEBUG and DEBUG_IGNORE_TIME_UNTIL and time() < DEBUG_IGNORE_TIME_UNTIL):
+                            (current_date.weekday() == 6 and current_date.hour <= 4) or \
+                            (DEBUG_COMMANDS and DEBUG_IGNORE_TIME_UNTIL and time() < DEBUG_IGNORE_TIME_UNTIL):
                         async with session.get(STREAM_URL) as resp:
-                            tail = b''
-                            not_processed_frames = []
-                            while True:
-                                if DEBUG:
-                                    global DEBUG_RESET_FLAG
-                                    if DEBUG_RESET_FLAG:
-                                        DEBUG_RESET_FLAG = False
-                                        resp.close()
-                                        break
-                                stream_chunk = await resp.content.read(65536)
-                                if not stream_chunk:
-                                    print('stream ended?')
-                                    break
-                                frames, tail = get_frames_from_flv_or_mp3(stream_chunk, tail)
-                                not_processed_frames += frames
-                                if len(not_processed_frames) > 100:
-                                    pcm = get_pcm_from_frames(not_processed_frames)
-                                    not_processed_frames = []
-                                    if len(pcm) == 0:
-                                        print('error in audio decoding')
-                                        continue
-                                    if is_ksenks_on_pcm(pcm):
-                                        global last_ksenks_timestamp
-                                        last_ksenks_timestamp = time()
+                            await process_stream(resp)
                     else:
-                        print('wait start time')
+                        log.info('now is not a stream time, waiting...')
                         await asyncio.sleep(30)
                 except aiohttp.ClientResponseError:
-                    print('aiohttp.ClientResponseError')
-
+                    log.warn('Response error, maybe wrong stream url')
     except asyncio.CancelledError:
         pass
-    finally:
-        pass
+
 
 async def start_background_tasks(web_app):
-    web_app['audio_processor'] = web_app.loop.create_task(processing_audio(web_app))
+    web_app['audio_processor'] = web_app.loop.create_task(main_loop(web_app))
 
 
 async def cleanup_background_tasks(web_app):
     web_app['audio_processor'].cancel()
     await web_app['audio_processor']
 
+
 if __name__ == "__main__":
     app = web.Application()
     app.on_startup.append(start_background_tasks)
     app.on_cleanup.append(cleanup_background_tasks)
-    app.router.add_get('/info', info)
-    app.router.add_post('/event', event)
+    app.router.add_get('/info', http_info)
+    app.router.add_post('/event', http_event)
     web.run_app(app, port=8080)
