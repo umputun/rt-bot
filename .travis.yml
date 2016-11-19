@@ -1,3 +1,6 @@
+# To increase travis available disk size
+sudo: required
+
 language: python
 
 python:
@@ -24,8 +27,10 @@ env:
 before_install:
   - pip install docker-compose==1.9.0
   - openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=Test/L=Test/O=Dis/CN=localhost" -keyout "etc/ssl/${SSL_KEY}" -out "etc/ssl/${SSL_CERT}"
+  - mkdir -p "$DOCKER_CACHE_DIR"
+  - du -sh "$DOCKER_CACHE_DIR"
   - |
-      mkdir -p "$DOCKER_CACHE_DIR"
+      echo "Loading docker containers from cache..."
       for DOCKER_CACHE_FILE in "$DOCKER_CACHE_DIR"/*; do
         if [ -f "$DOCKER_CACHE_FILE" ]; then
           echo "Loading docker container ${DOCKER_CACHE_FILE} in background..."
@@ -48,23 +53,19 @@ script:
   - while ! wget --no-check-certificate https://localhost/ping &> /dev/null; do sleep 1; done
   - echo "Waiting 30 seconds to ensure if all bots are ready..."; sleep 30
   - BOT_BASE_URL="https://localhost" python ci/run_bot_tests.py .
+  - docker-compose kill &
   - |
       if [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
         docker login \
           --username "$DOCKER_REGISTRY_LOGIN" \
           --password "$DOCKER_REGISTRY_PASSWORD" \
           "$DOCKER_REGISTRY_HOST"
-        docker-compose push &
         rm -rf "${DOCKER_CACHE_DIR}/*"
         echo "Dumping docker containers to cache..."
         docker images -q "${DOCKER_REGISTRY_NAMESPACE}/*" | \
         while read image; do
             echo "Dumping image ${image} in background..."
-            docker save $(docker history -q ${image} | grep -v '<missing>') | gzip > "$image.tar.gz" &
+            docker save $(docker history -q ${image} | grep -v '<missing>') | gzip > "$image.tar.gz" && docker rmi "$image" &
         done
-        echo "Waiting for background processes..."
-        wait
       fi
-
-after_script:
-  - docker-compose down
+    - echo "Waiting for background processes..."; wait
