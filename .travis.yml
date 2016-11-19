@@ -65,8 +65,9 @@ script:
         echo "Dumping docker containers to cache..."
         docker images -q "${DOCKER_REGISTRY_NAMESPACE}/*" | \
         while read image; do
-            echo "Dumping image ${image} in background..."
-            docker save $(docker history -q ${image} | grep -v '<missing>') | gzip > "$DOCKER_CACHE_DIR/$image.tar.gz" && docker rmi "$image" &
+            echo "Dumping image ${image} in the background..."
+            full_image=$(docker history -q ${image} | grep -v '<missing>')
+            docker save $full_image | gzip > "$DOCKER_CACHE_DIR/$image.tar.gz" && docker rmi -f "$image" &
         done
       fi
   - echo "Waiting for background processes..."; wait
