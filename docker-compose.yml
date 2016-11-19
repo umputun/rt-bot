@@ -296,3 +296,16 @@ services:
           options:
               max-size: "10m"
               max-file: "5"
+
+    linkers-bot:
+        build: .
+        container_name: linkers-bot
+        hostname: linkers-bot
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+              
