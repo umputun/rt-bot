@@ -28,7 +28,6 @@ before_install:
   - pip install docker-compose==1.9.0
   - openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=Test/L=Test/O=Dis/CN=localhost" -keyout "etc/ssl/${SSL_KEY}" -out "etc/ssl/${SSL_CERT}"
   - mkdir -p "$DOCKER_CACHE_DIR"
-  - du -sh "$DOCKER_CACHE_DIR"
   - ls -lh "$DOCKER_CACHE_DIR"
   - |
       echo "Loading docker containers from cache..."
