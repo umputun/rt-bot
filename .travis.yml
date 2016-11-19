@@ -55,7 +55,6 @@ script:
         docker-compose push
         rm -rf "${DOCKER_CACHE_DIR}/*"
         echo "Dumping docker containers to cache..."
-        docker_images=$(docker images -q "${DOCKER_REGISTRY_NAMESPACE}/*")
         docker images -q "${DOCKER_REGISTRY_NAMESPACE}/*" | \
         while read image; do
             echo "Dumping image ${image}..."
