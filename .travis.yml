@@ -27,8 +27,10 @@ before_install:
   - |
       mkdir -p "$DOCKER_CACHE_DIR"
       for DOCKER_CACHE_FILE in "$DOCKER_CACHE_DIR"/*; do
-        echo "Loading docker container ${DOCKER_CACHE_FILE}..."
-        gunzip -c "${DOCKER_CACHE_FILE}" | docker load
+        if [ -f "$DOCKER_CACHE_FILE"]; then
+          echo "Loading docker container ${DOCKER_CACHE_FILE}..."
+          gunzip -c "${DOCKER_CACHE_FILE}" | docker load
+        fi
       done
 
 install:
