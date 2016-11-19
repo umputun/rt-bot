@@ -35,10 +35,8 @@ before_install:
       for DOCKER_CACHE_FILE in "$DOCKER_CACHE_DIR"/*; do
         if [ -f "$DOCKER_CACHE_FILE" ]; then
           echo "Loading docker container ${DOCKER_CACHE_FILE} in background..."
-          gunzip -c "${DOCKER_CACHE_FILE}" | docker load &
+          gunzip -c "${DOCKER_CACHE_FILE}" | docker load
         fi
-        echo "Waiting for background processes..."
-        wait
       done
 
 install:
@@ -54,7 +52,7 @@ script:
   - while ! wget --no-check-certificate https://localhost/ping &> /dev/null; do sleep 1; done
   - echo "Waiting 30 seconds to ensure if all bots are ready..."; sleep 30
   - BOT_BASE_URL="https://localhost" python ci/run_bot_tests.py .
-  - docker-compose kill &
+  - docker-compose kill
   - |
       if [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
         docker login \
@@ -67,9 +65,8 @@ script:
         while read image; do
             echo "Dumping image ${image} in the background..."
             full_image=$(docker history -q ${image} | grep -v '<missing>')
-            docker save $full_image | gzip > "$DOCKER_CACHE_DIR/$image.tar.gz" && docker rmi -f "$image" &
+            docker save $full_image | gzip > "$DOCKER_CACHE_DIR/$image.tar.gz" && docker rmi -f "$image"
         done
       fi
-  - echo "Waiting for background processes..."; wait
   - du -h "$DOCKER_CACHE_DIR"
   - ls -lh "$DOCKER_CACHE_DIR"
