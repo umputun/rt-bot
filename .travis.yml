@@ -68,4 +68,4 @@ script:
             docker save $(docker history -q ${image} | grep -v '<missing>') | gzip > "$image.tar.gz" && docker rmi "$image" &
         done
       fi
-    - echo "Waiting for background processes..."; wait
+  - echo "Waiting for background processes..."; wait
