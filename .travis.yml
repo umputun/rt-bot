@@ -55,7 +55,12 @@ script:
         docker-compose push
         rm -rf "${DOCKER_CACHE_DIR}/*"
         echo "Dumping docker containers to cache..."
-        docker images -q "${DOCKER_REGISTRY_NAMESPACE}/*" | xargs -I '{}' -n 1 sh -c "echo 'Dumping image {}'; docker save {} | gzip > {}.tar.gz"
+        docker_images=$(docker images -q "${DOCKER_REGISTRY_NAMESPACE}/*")
+        docker images -q "${DOCKER_REGISTRY_NAMESPACE}/*" | \
+        while read image; do
+            echo "Dumping image ${image}..."
+            docker save $(docker history -q ${image} | grep -v '<missing>') | gzip > "$image.tar.gz"
+        done
       fi
 
 after_script:
