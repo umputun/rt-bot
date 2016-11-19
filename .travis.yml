@@ -69,3 +69,5 @@ script:
         done
       fi
   - echo "Waiting for background processes..."; wait
+  - du -h "$DOCKER_CACHE_DIR"
+  - ls -h "$DOCKER_CACHE_DIR"
