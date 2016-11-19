@@ -53,6 +53,10 @@ namespace LinkAggregatorBot.Services
                     }
                     return false;
                 }
+                if(message.Username == "linkers-bot")
+                {
+                    return false;
+                }
                 if (commands.Contains(message?.Text.ToLower()))
                 {
                     return true;
