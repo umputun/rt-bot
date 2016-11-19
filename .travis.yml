@@ -9,13 +9,14 @@ services:
 cache:
   directories:
     - $HOME/.cache/pip
-    - /home/travis/docker
+    - /home/travis/docker-cache
 
 env:
   SSL_KEY: nginx.key
   SSL_CERT: nginx.crt
   LETSENCRYPT: false
-  DOCKER_CACHE_FILE: /home/travis/docker/cache.tar.gz
+  DOCKER_CACHE_DIR: /home/travis/docker-cache
+  DOCKER_REGISTRY_NAMESPACE: rtbot
   DOCKER_REGISTRY_HOST: docker.io
   DOCKER_REGISTRY_LOGIN:
   DOCKER_REGISTRY_PASSWORD:
@@ -23,7 +24,11 @@ env:
 before_install:
   - pip install docker-compose==1.9.0
   - openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=Test/L=Test/O=Dis/CN=localhost" -keyout "etc/ssl/${SSL_KEY}" -out "etc/ssl/${SSL_CERT}"
-  - if [ -f ${DOCKER_CACHE_FILE} ]; then gunzip -c ${DOCKER_CACHE_FILE} | docker load; fi
+  - |
+      for DOCKER_CACHE_FILE in "$DOCKER_CACHE_DIR"/*; do
+        echo "Loading docker container ${DOCKER_CACHE_FILE}..."
+        gunzip -c "${DOCKER_CACHE_FILE}" | docker load
+      done
 
 install:
   - pip install -r ci/requirements.txt
@@ -45,8 +50,10 @@ script:
           --password "$DOCKER_REGISTRY_PASSWORD" \
           "$DOCKER_REGISTRY_HOST"
         docker-compose push
-        mkdir -p $(dirname ${DOCKER_CACHE_FILE})
-        docker save $(docker history -q ${DOCKER_REPOSITORY}:${TRAVIS_COMMIT} | grep -v '<missing>') | gzip > ${DOCKER_CACHE_FILE}
+        mkdir -p "${DOCKER_CACHE_DIR}"
+        rm -rf "${DOCKER_CACHE_DIR}/*"
+        echo "Dumping docker containers to cache..."
+        docker images -q "${DOCKER_REGISTRY_NAMESPACE}/*" | xargs -I '{}' -n 1 sh -c "echo 'Dumping image {}'; docker save {} | gzip > {}.tar.gz"
       fi
 
 after_script:
