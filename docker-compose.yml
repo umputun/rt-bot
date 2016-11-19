@@ -298,7 +298,7 @@ services:
               max-file: "5"
 
     linkers-bot:
-        build: .
+        build: linkers-bot
         container_name: linkers-bot
         hostname: linkers-bot
         restart: always
