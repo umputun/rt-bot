@@ -28,9 +28,11 @@ before_install:
       mkdir -p "$DOCKER_CACHE_DIR"
       for DOCKER_CACHE_FILE in "$DOCKER_CACHE_DIR"/*; do
         if [ -f "$DOCKER_CACHE_FILE" ]; then
-          echo "Loading docker container ${DOCKER_CACHE_FILE}..."
-          gunzip -c "${DOCKER_CACHE_FILE}" | docker load
+          echo "Loading docker container ${DOCKER_CACHE_FILE} in background..."
+          gunzip -c "${DOCKER_CACHE_FILE}" | docker load &
         fi
+        echo "Waiting for background processes..."
+        wait
       done
 
 install:
@@ -52,14 +54,16 @@ script:
           --username "$DOCKER_REGISTRY_LOGIN" \
           --password "$DOCKER_REGISTRY_PASSWORD" \
           "$DOCKER_REGISTRY_HOST"
-        docker-compose push
+        docker-compose push &
         rm -rf "${DOCKER_CACHE_DIR}/*"
         echo "Dumping docker containers to cache..."
         docker images -q "${DOCKER_REGISTRY_NAMESPACE}/*" | \
         while read image; do
-            echo "Dumping image ${image}..."
-            docker save $(docker history -q ${image} | grep -v '<missing>') | gzip > "$image.tar.gz"
+            echo "Dumping image ${image} in background..."
+            docker save $(docker history -q ${image} | grep -v '<missing>') | gzip > "$image.tar.gz" &
         done
+        echo "Waiting for background processes..."
+        wait
       fi
 
 after_script:
