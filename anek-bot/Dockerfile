@@ -1,16 +1,15 @@
-FROM ubuntu:14.04
-ENV BUILD_DATE=10_05_2016
-ENV TERM=xterm
-RUN apt-get update
-RUN apt-get install -y software-properties-common python-software-properties curl
-RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-RUN apt-get install -y nodejs git git-core gcc make build-essential
-RUN npm install -g nodemon mocha
+FROM node:7-alpine
+
 ENV NODE_PATH=.:/usr/lib/node_modules:/node_modules
-ADD ./package.json /package.json
-RUN mkdir -p /node_modules
-RUN npm install --prefix /
-ADD ./app /app
+
+RUN set -x && \
+    npm install --silent -g nodemon mocha && \
+    mkdir -p /node_modules
+
+COPY ./package.json /package.json
+RUN npm install --silent --prefix /
+
+COPY ./app /app
 WORKDIR /app
 
 EXPOSE 8080
