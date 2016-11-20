@@ -188,7 +188,9 @@ async def process_stream(resp):
             log.warn("Can't read audio stream")
             break
 
-        frames, tail = audio.get_frames_from_flv_or_mp3(stream_chunk, tail)
+        frames, tail = audio.get_frames_from_mp3(stream_chunk, tail)
+        if not len(frames):
+            log.warn("Can't extract mp3 frames from mp3")
         not_processed_frames += frames
 
         if len(not_processed_frames) > 100:

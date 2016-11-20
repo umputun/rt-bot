@@ -10,7 +10,7 @@ from sklearn import svm
 import audioread
 
 
-def get_frames_from_flv_or_mp3(chunk, tail=b''):
+def get_frames_from_mp3(chunk, tail=b''):
     def unpack_uint24_be(x):
         if len(x) != 3:
             return 0
@@ -32,25 +32,12 @@ def get_frames_from_flv_or_mp3(chunk, tail=b''):
             current_frame_offset = next_frame_offset
         tail = chunk[current_frame_offset:]
         return mp3_frames, tail
-
-    # trying detect flv-container
-    signature = struct.unpack('3s', chunk[0:3])[0]
-    # skip flv header
-    if signature == b'FLV':
-        start_pos = 9
     else:
-        start_pos = 0
-    while len(chunk) - start_pos > 15:
-        packet_type = chunk[start_pos + 4]
-        payload_size = unpack_uint24_be(chunk[start_pos + 5: start_pos + 8])
-        if len(chunk) <= start_pos + 15 + payload_size:
-            break
-        if packet_type == 8:
-            frame = chunk[start_pos + 16: start_pos + 15 + payload_size]
-            mp3_frames.append(frame)
-        start_pos = start_pos + 15 + payload_size
-    tail = chunk[start_pos:]
-    return mp3_frames, tail
+        # skipping part before mp3 frame marker
+        for i in range(len(chunk)-1):
+            if chunk[i] == 0xff and chunk[i + 1] >= 0xe0:
+                return mp3_frames, chunk[i:]
+    return mp3_frames, b''
 
 
 def get_pcm_from_frames(all_frames):
