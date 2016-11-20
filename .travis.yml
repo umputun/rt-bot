@@ -58,6 +58,7 @@ script:
           --username "$DOCKER_REGISTRY_LOGIN" \
           --password "$DOCKER_REGISTRY_PASSWORD" \
           "$DOCKER_REGISTRY_HOST"
+        docker-compose push
         rm -rf "${DOCKER_CACHE_DIR}/*"
         echo "Dumping docker containers to cache..."
         docker images -q "${DOCKER_REGISTRY_NAMESPACE}/*" | \
