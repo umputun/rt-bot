@@ -7,4 +7,4 @@ ignored_commands:
 
 test_cases:
   - command: "links"
-    result: ".*Вот отличная ссылка http://linka.com/answer</dd></dl>$"
+    result: "^.*Вот отличная ссылка.*$"
