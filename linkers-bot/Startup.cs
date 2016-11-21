@@ -43,9 +43,10 @@ namespace LinkAggregatorBot
             {
                 inApp.Run(async (context) =>
                 {
+                    context.Response.StatusCode = 200;
                     using (var writer = new StreamWriter(context.Response.Body))
                     {
-                        await writer.WriteAsync(@"{author = 'MrPink',info: 'Возвращает ссылки, опубликованные в чатике во время и немного после выпуска',commands:['" + commandsArrStr + "']}");
+                        await writer.WriteAsync(@"{author = 'Hohland',info: 'Возвращает ссылки, опубликованные в чатике во время и немного после выпуска',commands:['" + commandsArrStr + "']}");
                     }
                 });
             });
@@ -63,14 +64,14 @@ namespace LinkAggregatorBot
                     {
                         var msg = JsonConvert.DeserializeObject<Message>(await reader.ReadToEndAsync());
                         var result = await service.ProcessMessage(msg);
-                        context.Response.StatusCode = result ? 200 : 417;
+                        context.Response.StatusCode = result ? 201 : 417;
                         if (result)
                         {
                             await writer.WriteAsync(JsonConvert.SerializeObject(
                                 new
                                 {
                                     text = await service.GetMDLinksAsync(),
-                                    bot = "rt-bot-linkers"
+                                    bot = "linkers-bot"
                                 }));
                         }
                     }
