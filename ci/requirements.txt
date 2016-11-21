@@ -5,4 +5,4 @@
 #    pip-compile --output-file requirements.txt requirements.in
 #
 pyyaml==3.12
-requests==2.12.0
+requests==2.11.1

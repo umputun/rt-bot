@@ -1,7 +1,11 @@
 FROM golang:alpine
 
+RUN set -x && \
+    apk add --no-cache ca-certificates && \
+    rm -rf /var/cache/apk/* /tmp/*
+
 ADD . /go/src/github.com/umputun/rt-bot/gif-bot
-RUN apk --update add ca-certificates
+
 RUN \
  cd /go/src/github.com/umputun/rt-bot/gif-bot && \
  go build -o /srv/gif-bot && \

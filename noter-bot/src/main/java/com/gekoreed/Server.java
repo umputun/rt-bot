@@ -26,7 +26,11 @@ public class Server {
     public static void setServer() {
         Server server = new Server();
         Spark.port(8080);
-        Spark.post("/event", (req, resp) -> server.getAnswer(req));
+        Spark.post("/event", (req, resp) -> {
+            resp.status(201);
+            resp.type("application/json");
+            return server.getAnswer(req);
+        });
     }
 
     private String getAnswer(Request req) {

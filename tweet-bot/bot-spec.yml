@@ -1,0 +1,20 @@
+bot_name: "tweet-bot"
+
+defaults:
+  username: "tweet-bot"
+  display_name: "tweet-bot"
+
+ignored_commands:
+  -  "!tweet"
+  -  "!твит ksenks!"
+  -  "!твит qqqqqqqqqqqqqqqq"
+
+test_cases:
+  - command: "бобук!"
+    result: ".+"
+
+  - command: "!umputun"
+    result: ".+"
+
+  - command: "!твит ksenks"
+    result: ".+"

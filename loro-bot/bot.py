@@ -2,7 +2,7 @@
 
 import os
 import markovify
-import ujson as json
+import json
 
 from flask import Flask, current_app, request, Response
 
@@ -67,7 +67,7 @@ def process_message(message):
 
 def event_handler():
     try:
-        data = json.loads(request.data)
+        data = json.loads(request.data.decode('utf-8'))
     except ValueError:
         return silence_response()
 

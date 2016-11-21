@@ -20,8 +20,8 @@ type event struct {
 }
 
 type response struct {
-	Text string
-	Bot  string
+	Text string `json:"text"`
+	Bot  string `json:"bot"`
 }
 
 var rLink = regexp.MustCompile(`(https?\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(/\S*)?)`)

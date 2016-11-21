@@ -6,21 +6,28 @@ from datetime import datetime, timedelta
 from time import time
 
 import pytz
+import requests
 from aiohttp import web
+from disqusapi import DisqusAPI
 from log_handler import ArrayHandler
 
-import requests
-
 DEBUG_COMMANDS = True
+DISQUS_PUBLIC_KEY = 'HW9WFn7kT9Tz0ou9h0wwNElRDNgybM8BONcpHkFDMtBxXFs2cjtOn5pK45xqSEK7'
 
 last_update_timestamp = 0
 last_themes_num = 0
 last_podcast_num = 0
 
+user_themes_posts = None
+user_themes_timestamp = 0
+
 last_logs = ArrayHandler(max_count=200)
 logging.basicConfig(format='%(asctime)-15s %(levelname)-8s %(message)s', level=logging.INFO,
                     datefmt="%Y-%m-%d %H:%M:%S", handlers=[logging.StreamHandler(), last_logs])
 log = logging.getLogger()
+
+disqus = DisqusAPI(public_key=DISQUS_PUBLIC_KEY)
+disqus_thread_id = 0
 
 
 def minutes_word(minutes):
@@ -57,8 +64,8 @@ def hours_minutes_text(minutes, hours=0):
 
 async def http_info(request):
     data = {'author': 'strayge',
-            'info': 'Rtnumber-bot пишет номер выпуска и время до эфира',
-            'commands': ['Номер! | Выпуск!', 'Время!']}
+            'info': 'Rtnumber-bot выводит номер выпуска, время до эфира, темы слушателей',
+            'commands': ['Номер! | Выпуск!', 'Время!', 'Темы слушателей! [:число результатов]']}
     return web.json_response(data)
 
 
@@ -67,7 +74,7 @@ async def http_event(request):
         input_json = await request.json()
     except json.decoder.JSONDecodeError:
         return web.Response(status=417)
-    
+
     input_text = input_json.get('text')
 
     valid_key = False
@@ -97,14 +104,14 @@ async def http_event(request):
         weekday = dt.weekday()
         if weekday == 5:
             if dt.hour < 23:
-                min_until_rt = 23*60 - (dt.hour*60 + dt.minute)
+                min_until_rt = 23 * 60 - (dt.hour * 60 + dt.minute)
                 text = 'Трансляция должна начаться через %s' % hours_minutes_text(min_until_rt)
             else:
-                min_after_rt = (dt.hour-23)*60 + dt.minute
+                min_after_rt = (dt.hour - 23) * 60 + dt.minute
                 text = 'Трансляция должна идти уже %s' % hours_minutes_text(min_after_rt)
         elif weekday == 6:
             if dt.hour <= 2:
-                min_after_rt = (dt.hour+1)*60 + dt.minute
+                min_after_rt = (dt.hour + 1) * 60 + dt.minute
                 text = 'Трансляция должна идти уже %s' % hours_minutes_text(min_after_rt)
             else:
                 text = 'Трансляция должна была уже закончиться'
@@ -131,6 +138,52 @@ async def http_event(request):
         output = {'text': text, 'bot': 'rtnumber-bot'}
         return web.json_response(data=output, status=201)
 
+    def is_one_of_cmds_in_input(cmds, input):
+        for cmd in cmds:
+            if cmd in input.strip().lower():
+                return cmd
+
+    command = is_one_of_cmds_in_input(['темы слушателей!', '!темы слушателей',
+                                       'темы пользователей!', '!темы пользователей'], input_text)
+    if command:
+        def gen_user_themes_text(posts_list, max_posts=0):
+            max_allowed_len = 4000
+            text_out = '**Темы слушателей:**\\n\\n'
+            if max_posts <= 0:
+                max_posts = len(posts_list)
+            for post in posts_list[:max_posts]:
+                likes = post['likes']
+                msg = post['raw_message'].replace('\n', ' ')
+                new_line = '* **[%+i]** %s\\n' % (likes, msg)
+                if len(text_out) + len(new_line) >= max_allowed_len:
+                    break
+                text_out += new_line
+            return text_out
+
+        max_len = 0
+        if ':' in input_text:
+            part1, part2 = input_text.strip().lower().split(':', 1)
+            if part1.strip() == command and part2.strip().isdigit():
+                max_len = int(part2)
+
+        if not disqus_thread_id:
+            return web.Response(status=417)
+
+        global user_themes_posts, user_themes_timestamp
+
+        if user_themes_posts and time() < user_themes_timestamp + 5 * 60:
+            output = {'text': gen_user_themes_text(user_themes_posts, max_len), 'bot': 'rtnumber-bot'}
+            return web.json_response(data=output, status=201)
+
+        posts = disqus.get('threads.listPosts', forum='radiot', limit=100, thread=disqus_thread_id, method='GET')
+        sorted_posts = posts[:]
+        sorted_posts.sort(key=lambda x: x['likes'], reverse=True)
+        user_themes_posts = sorted_posts
+        user_themes_timestamp = time()
+
+        output = {'text': gen_user_themes_text(user_themes_posts, max_len), 'bot': 'rtnumber-bot'}
+        return web.json_response(data=output, status=201)
+
     return web.Response(status=417)
 
 
@@ -138,44 +191,60 @@ async def main_loop(web_app):
     try:
         while True:
             global last_update_timestamp
-            
-            if time() > last_update_timestamp + 24*3600:
+
+            if time() > last_update_timestamp + 24 * 3600:
                 global last_podcast_num, last_themes_num
                 try:
                     r = requests.get('https://radio-t.com/', timeout=20)
                 except:
                     log.warn('Response error')
-                    await asyncio.sleep(10)
+                    await asyncio.sleep(5 * 60)
                     continue
                 r.encoding = 'utf-8'
                 try:
                     h1 = r.text.split('"entry-title">')[1:]
                     for i in range(len(h1)):
-                        h1[i] = h1[i].split('">',1)[1].split('</a',1)[0]
+                        h1[i] = h1[i].split('">', 1)[1].split('</a', 1)[0]
                 except:
                     log.warn('Parsing error')
-                    await asyncio.sleep(10)
+                    await asyncio.sleep(5 * 60)
                     continue
 
                 podcast_num_found = False
                 themes_num_found = False
                 for title in h1:
-                    if not podcast_num_found and 'Радио-Т 'in title:
+                    if not podcast_num_found and 'Радио-Т ' in title:
                         num = title.replace('Радио-Т ', '').strip()
                         if num.isdigit():
                             last_podcast_num = int(num)
                             podcast_num_found = True
                         else:
                             log.warn('Invalid podcast num: "%s"' % num)
-                    if not themes_num_found and 'Темя для 'in title:
-                        num = title.replace('Темя для ', '').strip()
+                    if not themes_num_found and 'Темы для ' in title:
+                        num = title.replace('Темы для ', '').strip()
                         if num.isdigit():
                             last_themes_num = int(num)
                             themes_num_found = True
                         else:
                             log.warn('Invalid themes num: "%s"' % num)
-                if last_podcast_num:
+
+                if podcast_num_found:
                     log.info('Retrieved podcast number, %i' % last_podcast_num)
+
+                if themes_num_found:
+                    threads = disqus.get('forums.listThreads', forum='radiot', method='GET')
+                    thread_id = None
+                    for thread in threads:
+                        if 'Темы для %i' % last_themes_num in thread['title']:
+                            thread_id = thread['id']
+                            break
+                    if thread_id:
+                        global disqus_thread_id
+                        disqus_thread_id = thread_id
+                    else:
+                        log.warn('Disqus thread for themes not found')
+
+                if podcast_num_found and themes_num_found:
                     last_update_timestamp = time()
             await asyncio.sleep(10)
     except asyncio.CancelledError:

@@ -1,0 +1,13 @@
+bot_name: "guido-bot"
+bot_display_name: "g-bot"
+
+ignored_commands:
+  - "Привет"
+  - "Как дела?"
+
+test_cases:
+  - command: "гвидо"
+    result: ".+"
+
+  - command: "guido"
+    result: ".+"

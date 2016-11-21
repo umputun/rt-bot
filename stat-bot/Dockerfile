@@ -1,21 +1,16 @@
-FROM ubuntu:14.04.5
+FROM perl:5
 
-RUN apt-get update
-RUN apt-get install -y curl
-RUN apt-get install -y build-essential
-RUN curl -L http://cpanmin.us | sudo perl - App::cpanminus
-RUN cpanm JSON
-RUN curl -L https://cpanmin.us | perl - -M https://cpan.metacpan.org -n Mojolicious
+ADD http://download.cdn.yandex.net/mystem/mystem-2.1-linux3.2-64bit.tar.gz /tmp/mystem.tar.gz
 
+RUN cpanm Mojolicious JSON
+
+COPY . /stat-bot
 WORKDIR /stat-bot
 
-RUN curl -L -O http://download.cdn.yandex.net/mystem/mystem-2.1-linux3.2-64bit.tar.gz
-RUN tar -xvf mystem-2.1-linux3.2-64bit.tar.gz
-RUN chmod +x mystem
-
-ADD stat-bot.pl /stat-bot
-RUN mkdir lib
-ADD lib/StatBot.pm /stat-bot/lib
+RUN set -x && \
+    tar -xvf /tmp/mystem.tar.gz && \
+    chmod +x mystem && \
+    rm -rf /tmp/*
 
 EXPOSE 8080
 

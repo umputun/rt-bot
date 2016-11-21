@@ -1,0 +1,15 @@
+bot_name: "search-bot"
+
+ignored_commands:
+  - "Привет"
+
+test_cases:
+  - command: "выпуск 520!"
+    result: ".+"
+
+  - command: "Поиск docker swarm!"
+    result: ".+"
+
+  - command: "Поиск +яндекс* +google :10!"
+    result: ".+"
+ 

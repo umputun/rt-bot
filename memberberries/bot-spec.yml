@@ -1,0 +1,9 @@
+bot_name: "memberberries"
+bot_display_name: "MemberBerries"
+
+ignored_commands:
+  - "Привет"
+
+test_cases:
+  - command: "Помните Оляпку?"
+    result: "О! Я помню..."

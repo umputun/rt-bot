@@ -1,0 +1,16 @@
+bot_name: "loro-bot"
+bot_display_name: "Loro"
+
+ignored_commands:
+  - "Привет"
+  - "Как дела?"
+
+test_cases:
+  - command: "Loro bobuk"
+    result: ".+"
+
+  - command: "Loro umputun"
+    result: ".+"
+
+  - command: "Loro trump"
+    result: ".+"
