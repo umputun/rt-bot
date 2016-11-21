@@ -34,7 +34,6 @@ namespace LinkAggregatorBot
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             commandsArrStr = string.Join("', '", service.GetCommands().Result);
-
             app.MapWhen((context) =>
             {
                 return context.Request.Path.Value.ToString().EndsWith("/info") && context.Request.Method == "GET";
@@ -62,9 +61,10 @@ namespace LinkAggregatorBot
                     using (var reader = new StreamReader(context.Request.Body))
                     using (var writer = new StreamWriter(context.Response.Body))
                     {
-                        var msg = JsonConvert.DeserializeObject<Message>(await reader.ReadToEndAsync());
+                        var msg = JsonConvert.DeserializeObject<Message>(await reader.ReadToEndAsync());                        
                         var result = await service.ProcessMessage(msg);
                         context.Response.StatusCode = result ? 201 : 417;
+                        context.Response.ContentType = "application/json;charset=UTF-8";                        
                         if (result)
                         {
                             await writer.WriteAsync(JsonConvert.SerializeObject(
