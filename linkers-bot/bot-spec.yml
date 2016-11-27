@@ -7,4 +7,4 @@ ignored_commands:
 
 test_cases:
   - command: "links"
-  - result: ".*"
+    result: ".*\\n"
