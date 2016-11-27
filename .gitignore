@@ -3,3 +3,5 @@ node_modules/
 *.pyc
 __pycache__
 etc/ssl/*
+wot-bot/webserver/bin/
+wot-bot/webserver/obj/

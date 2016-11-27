@@ -359,3 +359,15 @@ services:
           options:
               max-size: "10m"
               max-file: "5"
+
+    rest-voter:
+        build: wot-bot
+        image: rtbot/wot-bot
+        container_name: wot-bot
+        hostname: wot-bot
+        restart: always
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"

@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "webserver", "webserver\webserver.fsproj", "{7A0F4320-48BA-4519-9ED8-CC8704A664BF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F2711263-C011-4874-AE8A-239C9E5ACBA5}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A0F4320-48BA-4519-9ED8-CC8704A664BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A0F4320-48BA-4519-9ED8-CC8704A664BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A0F4320-48BA-4519-9ED8-CC8704A664BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A0F4320-48BA-4519-9ED8-CC8704A664BF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
