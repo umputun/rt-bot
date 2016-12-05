@@ -3,5 +3,9 @@ node_modules/
 *.pyc
 __pycache__
 etc/ssl/*
+<<<<<<< HEAD
 wot-bot/webserver/bin/
 wot-bot/webserver/obj/
+=======
+.vscode
+>>>>>>> upstream/master
