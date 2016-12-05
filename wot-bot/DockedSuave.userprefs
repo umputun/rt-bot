@@ -1,0 +1,16 @@
+﻿<Properties StartupConfiguration="{7A0F4320-48BA-4519-9ED8-CC8704A664BF}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="webserver/Program.fs">
+    <Files>
+      <File FileName="webserver/Program.fs" Line="132" Column="4" />
+      <File FileName="Dockerfile" Line="1" Column="1" />
+      <File FileName="webserver/Types.fs" Line="17" Column="1024" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.webserver PreferredExecutionTarget="MonoDevelop.Default" />
+  <MultiItemStartupConfigurations />
+</Properties>

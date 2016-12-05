@@ -251,6 +251,18 @@ services:
         container_name: rest-voter
         hostname: rest-voter
         restart: always
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+    wot-bot:
+        build: wot-bot
+        image: rtbot/wot-bot
+        container_name: wot-bot
+        hostname: wot-bot
+        restart: always
         logging: *default_logging
 
     timezone-bot:

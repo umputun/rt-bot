@@ -1,0 +1,18 @@
+bot_name: "wot-bot"
+
+defaults:
+  username: "test-user"
+  display_name: "Test User"
+
+ignored_commands:
+  - "Ignored message 1"
+  - "Ignored message 2"
+  - "Ignored message 3"
+
+test_cases:
+  - command: "wotbot tanks Az_Ainamart"
+    result: "(.+\n*)*"
+  - command: "wotbot medals Az_Ainamart"
+    result: "(.+\n*)*"
+  - command: "wotbot stat Az_Ainamart"
+    result: "(.+\n*)*"
