@@ -12,3 +12,7 @@ ignored_commands:
 test_cases:
   - command: "wotbot tanks Az_Ainamart"
     result: "(.+\n*)*"
+  - command: "wotbot medals Az_Ainamart"
+    result: "(.+\n*)*"
+  - command: "wotbot stat Az_Ainamart"
+    result: "(.+\n*)*"
