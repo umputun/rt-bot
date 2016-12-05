@@ -177,10 +177,12 @@ let processRequest (r:HttpRequest) =
   let message = RawIncomingMessage.Parse s
   parseMessage message.Text
 
+let aboutBot = """{author: "Dmitry Tabakerov @azazeo <tabakerov@outlook.com>", info: "Ботик для получения инфы о игроке в World of Tanks: общая стата, основная техника и медальки игрока.", commands: ["wotbot stat UserName", "wotbot medals UserName", "wotbot tanks UserName"] }"""
+
 let config = {defaultConfig with bindings = [HttpBinding.mk HTTP (System.Net.IPAddress.Parse "0.0.0.0") 8080us]}
 let app =
   choose
-    [ GET >=>  path "/info" >=> OK "About bot"
-      POST >=> path "/event" >=> request (fun r -> processRequest r ) ]
+    [ GET >=>  path "/info" >=> OK aboutBot >=> Writers.addHeader "Content-Type" "application/json; charset=UTF-8"
+      POST >=> path "/event" >=> request (fun r -> processRequest r ) >=> Writers.addHeader "Content-Type" "application/json; charset=UTF-8"]
 
 startWebServer config app
