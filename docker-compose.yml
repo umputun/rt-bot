@@ -271,7 +271,7 @@ services:
         restart: always
         logging: *default_logging
 
-    5minphp-bot:
+    linus-quotes-bot:
         build: linus-quotes-bot
         image: rtbot/linus-quotes-bot
         container_name: linus-quotes-bot
