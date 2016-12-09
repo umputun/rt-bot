@@ -1,0 +1,6 @@
+version: '2'
+services:
+  linux-quotes-bot:
+    build: .
+    ports:
+     - "8080:8080"
