@@ -53,6 +53,7 @@ services:
             - hcalendar-bot
             - timezone-bot
             - doit-bot
+            - linus-quotes-bot
 
 
     hello:
@@ -269,11 +270,19 @@ services:
         hostname: doit-bot
         restart: always
         logging: *default_logging
-        
+
     money_bot:
         build: money_bot
         image: rtbot/money_bot
         container_name: money_bot
         hostname: money_bot
         restart: always
-        logging: *default_logging        
+        logging: *default_logging
+
+    linus-quotes-bot:
+        build: linus-quotes-bot
+        image: rtbot/linus-quotes-bot
+        container_name: linus-quotes-bot
+        hostname: linus-quotes-bot
+        restart: always
+        logging: *default_logging

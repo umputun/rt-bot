@@ -1,0 +1,7 @@
+linus-quotes-bot:
+    build: .
+    container_name: linus-quotes-bot
+    hostname: linus-quotes-bot
+    restart: always
+    ports:
+        - "8080:8080"
