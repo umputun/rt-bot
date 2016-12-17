@@ -52,10 +52,10 @@ app.post('/event', function(req, res) {
                 let inRub = (quotes[3].val*parseFloat(v)).toFixed(2);
 
                 let responseText = "";
-                if(c!="USD") responseText += inDolar.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " USD\n";
-                if(c!="EUR") responseText += inEuro.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " EUR\n";
-                if(c!="UAH") responseText += inHrn.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " UAH\n";
-                if(c!="RUB") responseText += inRub.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " RUB\n";
+                if(c!="USD") responseText += inDolar.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " USD - ";
+                if(c!="EUR") responseText += inEuro.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " EUR - ";
+                if(c!="UAH") responseText += inHrn.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " UAH - ";
+                if(c!="RUB") responseText += inRub.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " RUB";
 
                 res.status(201);
                 res.json({
