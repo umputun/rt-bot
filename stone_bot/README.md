@@ -20,3 +20,5 @@ Throw a stone @exelban
 ```json
 /stones @exelban
 ```
+
+[Оригинальный репозиторий](https://github.com/exelban/stone_bot)
