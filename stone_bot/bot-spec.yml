@@ -12,5 +12,5 @@ ignored_commands:
   - "Ignored message 3"
   
 test_cases:
-  - command: "/stone"
-    result: "[a-z]+"
+  - command: "/stone @exelban"
+    result: "@"
