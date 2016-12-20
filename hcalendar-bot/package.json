@@ -1,0 +1,17 @@
+{
+  "name": "hcalendar-bot",
+  "version": "0.0.1",
+  "description": "bot 'HCalendar' for radio-t",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "request": "^2.78.0"    
+  }
+}

@@ -117,19 +117,53 @@ def test_bot(config: BotConfig) -> bool:
     return is_success
 
 
+def test_bot_list(bot_names: set) -> bool:
+    url = '{}/list'.format(BASE_URL)
+    logger.warn("\nTesting if bot list is correct (GET {})\n".format(url))
+    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+    response = requests.get(url, verify=False, allow_redirects=False)
+    if response.status_code != 200:
+        logger.error(
+            '"200" HTTP status expected, "{}" given'.format(
+                response.status_code,
+            )
+        )
+        return False 
+
+    given_bot_names = set(response.json())
+    if given_bot_names == bot_names:
+        logger.warn("Bot list is actual.")
+        return True
+
+    if given_bot_names < bot_names:
+        logger.error("Missing bot names in /list location: {}".format(
+            ', '.join(b for b in (bot_names - given_bot_names))
+        ))
+    else:
+        logger.error("Unexpected bot names in /list location: {}".format(
+            ', '.join(b for b in (given_bot_names - bot_names))
+        ))
+    return False
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Test radio-t bots.')
     parser.add_argument('project_dir', type=str)
     args = parser.parse_args()
     bots = find_bots(args.project_dir)
     failed_bots = []
+
     is_success = True
     for bot in bots.values():
         if not test_bot(bot):
             failed_bots.append(bot)
             is_success = False
+
     if not is_success:
-        logger.error("\nAll failed bots: {}".format(
+        logger.error("\nFailed bots: {}".format(
             ', '.join(b.bot_name for b in failed_bots)
         ))
+
+    is_bot_list_ok = test_bot_list(set(bots.keys()))
+    if not all([is_success, is_bot_list_ok]):
         sys.exit(1)

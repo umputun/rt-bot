@@ -1,0 +1,7 @@
+sovet-bot:
+    build: .
+    container_name: hcalendar-bot
+    hostname: hcalendar-bot
+    restart: hcalendar-bot
+    ports:
+        - "8080:8080"

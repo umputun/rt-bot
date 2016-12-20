@@ -1,0 +1,82 @@
+[
+  {
+    "w": "хочу",
+    "a": ["So just do it"]
+  },
+  {
+    "w": "do it",
+    "a": ["DO IT!"]
+  },
+  {
+    "w": "сделай",
+    "a": ["try it!"]
+  },
+  {
+    "w": "сделаю",
+    "a": [
+      "So just do it",
+      "try it!",
+      "what are you waiting for? DO IT!"
+    ]
+  },
+  {
+    "w": "устал",
+    "a": ["If you're tired of starting over STOP giving up!"]
+  },
+  {
+    "w": "не могу",
+    "a": [
+      "Yes you can",
+      "Nothing is impossible"
+    ]
+  },
+  {
+    "w": "невозможно",
+    "a": [
+      "Nothing is impossible"
+    ]
+  },
+  {
+    "w": "жди",
+    "a": [
+      "No, what are you waiting for?"
+    ]
+  },
+  {
+    "w": "поехали",
+    "a": [
+      "Do it!"
+    ]
+  },
+  {
+    "w": "завтра",
+    "a": [
+      "Yesterday you said tomorrow",
+      "Don't let your dreams be dreams",
+      "You should get to the point"
+    ]
+  },
+  {
+    "w": "планирую",
+    "a": [
+      "Make your dreams come true",
+      "Don't let your dreams be dreams",
+      "Just do it",
+      "You should get to the point"
+    ]
+  },
+  {
+    "w": "мечта",
+    "a":  [
+      "Don't let your dreams be dreams",
+      "Make your dreams come true"
+    ]
+  },
+  {
+    "w": "мечтаю",
+    "a":  [
+      "Don't let your dreams be dreams",
+      "Make your dreams come true"
+    ]
+  }
+]

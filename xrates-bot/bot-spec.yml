@@ -1,0 +1,15 @@
+bot_name: "xrates-bot"
+bot_display_name: "xrates"
+
+ignored_commands:
+  - "Привет"
+
+test_cases:
+  - command: "10 USD in RUB"
+    result: ".+"
+
+  - command: "4.2 гривны в рублях"
+    result: ".+"
+
+  - command: "2 $ в euro"
+    result: ".+"

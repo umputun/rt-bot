@@ -1,0 +1,8 @@
+xrates-bot:
+    build: .
+    container_name: xrates-bot
+    hostname: xrates-bot
+    restart: always
+    ports:
+         - "8080:8080"
+

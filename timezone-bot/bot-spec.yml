@@ -1,0 +1,11 @@
+bot_name: "timezone-bot"
+
+ignored_commands:
+  - "Привет"
+
+test_cases:
+  - command: "время в красноярске"
+    result: ".+"
+
+  - command: "время во владивостоке"
+    result: ".+"
