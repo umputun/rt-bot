@@ -5,4 +5,4 @@ services:
     build: .
     container_name: linkers-bot
     ports:
-    - "8080:8080"
+        - "8080:8080"

@@ -1,0 +1,41 @@
+version: '2'
+
+services:
+    nginx:
+        image: umputun/nginx-le:latest
+        container_name: nginx-bot
+        hostname: nginx-bot
+        restart: always
+
+        logging: &default_logging
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+        volumes:
+            - ./etc/ssl:/etc/nginx/ssl
+            - ./etc/nginx.conf:/etc/nginx/service.conf
+
+        ports:
+            - "80:80"
+            - "443:443"
+
+        environment:
+            - TZ=America/Chicago
+            - LETSENCRYPT=$LETSENCRYPT
+            - SSL_KEY=$SSL_KEY
+            - SSL_CERT=$SSL_CERT
+            - LE_EMAIL=umputun@gmail.com
+            - LE_FQDN=bot.radio-t.com
+
+        depends_on:
+            - linkers
+
+    linkers:
+        build: linkers-bot
+        image: rtbot/linkers
+        container_name: linkers-bot
+        hostname: linkers-bot
+        restart: always
+        logging: *default_logging
