@@ -20,10 +20,7 @@
 ```json
 {
   bot: "money_bot",
-  text: "5.30 USD
-         136.67 UAH
-         335.51 RUB
-        "
+  text: "5.30 USD - 136.67 UAH - 335.51 RUB"
 }
 ```
 
