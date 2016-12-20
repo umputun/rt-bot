@@ -10,8 +10,9 @@
 ## Использование
 Бросить камень:
 ```json
-Бросить камень в @exelban
 /stone @exelban
+Бросить камень в @exelban
+Бросить камень @exelban
 Throw a stone at @exelban
 Throw a stone @exelban
 ```
