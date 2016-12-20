@@ -13,4 +13,4 @@ ignored_commands:
   
 test_cases:
   - command: "/stone @exelban"
-    result: "(камень|бросил)"
+    result: "^Test User бросил камень в @exelban"
