@@ -63,11 +63,11 @@ app.post('/event', function(req, res) {
                     let inRub = (quotes[3].val*parseFloat(v)).toFixed(2);
 
                     let responseParts = [];
-                    if(c!="USD") responseParts.push(inDolar.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " USD");
-                    if(c!="EUR") responseParts.push(inEuro.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " EUR");
-                    if(c!="UAH") responseParts.push(inHrn.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " UAH");
-                    if(c!="RUB") responseParts.push(inRub.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " RUB");
-                    let responseText = responseParts.join(" - ");
+                    if(c!="USD") responseParts.push(inDolar.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " $");
+                    if(c!="EUR") responseParts.push(inEuro.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " €");
+                    if(c!="UAH") responseParts.push(inHrn.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " грн.");
+                    if(c!="RUB") responseParts.push(inRub.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " руб.");
+                    let responseText = responseParts.join(" | ");
 
                     callback(null, responseText);
                 }
