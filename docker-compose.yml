@@ -55,7 +55,6 @@ services:
             - doit-bot
             - xrates-bot
             - money_bot
-            - stone_bot
 
     hello:
         build: hello
@@ -285,13 +284,5 @@ services:
         image: rtbot/xrates-bot
         container_name: xrates-bot
         hostname: xrates-bot
-        restart: always
-        logging: *default_logging
-        
-    stone_bot:
-        build: stone_bot
-        image: rtbot/stone_bot
-        container_name: stone_bot
-        hostname: stone_bot
         restart: always
         logging: *default_logging
