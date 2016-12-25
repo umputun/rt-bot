@@ -61,12 +61,12 @@ app.post('/event', function(req, res) {
                     let inEuro = (quotes[1].val*parseFloat(v)).toFixed(2);
                     let inHrn = (quotes[2].val*parseFloat(v)).toFixed(2);
                     let inRub = (quotes[3].val*parseFloat(v)).toFixed(2);
-
+                    
                     let responseParts = [];
-                    if(c!="USD") responseParts.push(inDolar.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " $");
-                    if(c!="EUR") responseParts.push(inEuro.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " €");
-                    if(c!="UAH") responseParts.push(inHrn.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " грн.");
-                    if(c!="RUB") responseParts.push(inRub.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " руб.");
+                    if(c!="USD") responseParts.push((inDolar.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " $").replace(".00", ""));
+                    if(c!="EUR") responseParts.push((inEuro.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " €").replace(".00", ""));
+                    if(c!="UAH") responseParts.push((inHrn.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " грн.").replace(".00", ""));
+                    if(c!="RUB") responseParts.push((inRub.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ') + " руб.").replace(".00", ""));
                     let responseText = responseParts.join(" | ");
 
                     callback(null, responseText);
@@ -89,7 +89,7 @@ app.post('/event', function(req, res) {
 app.all('/info', function(req, res) {
     res.json({
         author: 'exelban',
-        info: 'Если в сообщение была упомянутая какая-то валюта (USD, EUR, UAH, RUB), бот конвертирует ее в доллары, евро, грн, руб. (5€ = 5.30 USD, 136.67 UAH, 335.51 RUB)'
+        info: 'Если в сообщение была упомянутая какая-то валюта (USD, EUR, UAH, RUB), бот конвертирует ее в доллары, евро, грн, руб. (5€ = 5.30 $ | 136.67 грн. | 335.51 руб.)'
     });
     res.end();
 });
