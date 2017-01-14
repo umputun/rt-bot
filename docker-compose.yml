@@ -256,6 +256,13 @@ services:
         restart: always
         logging: *default_logging
 
+    linkers-bot:
+        build: linkers-bot
+        container_name: linkers-bot
+        hostname: linkers-bot
+        restart: always
+        logging: *default_logging
+
     money_bot:
         build: money_bot
         image: rtbot/money_bot

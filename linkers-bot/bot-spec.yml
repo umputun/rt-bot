@@ -1,0 +1,10 @@
+bot_name: "linkers-bot"
+bot_display_name: "Сборщик ссылок"
+
+ignored_commands:
+  - "Привет"
+  - "Вот отличная ссылка http://linka.com/answer"
+
+test_cases:
+  - command: "links"
+    result: ".*\\n"
