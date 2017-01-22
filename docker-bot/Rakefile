@@ -1,0 +1,17 @@
+namespace :db do
+
+  require 'daybreak'
+
+  task :create do
+    puts 'Trying to create database...'
+    db = Daybreak::DB.new "radio-t-docker-bot.db"
+    if db["created_at"]==nil
+      db["created_at"] = Time.now
+    else
+      puts "Database already created at #{db["created_at"]}"
+    end
+    db.flush
+    db.close
+  end
+
+end

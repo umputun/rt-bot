@@ -33,5 +33,5 @@ curl \
      -v \
      -X POST \
      -d '{"text":"Расскажи анекдот","username":123,"display_name":"login"}' \
-     -H 'content-type:application/json'   http://192.168.0.30:8080/
+     -H 'content-type:application/json'   http://192.168.0.30:8080/event
 ```

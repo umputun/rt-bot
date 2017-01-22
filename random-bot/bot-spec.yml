@@ -1,0 +1,26 @@
+bot_name: "random-bot"
+
+defaults:
+  username: "test-user"
+  display_name: "Test User"
+
+ignored_commands:
+  - "Привет"
+  - "бобук"
+  - "google"
+  - "яндекс"
+  - "..."
+  - "добра всем"
+
+test_cases:
+  - command: "/random Да Нет"
+    result: "(.+:\\s(Да|Нет))|(Чего надо\\? проваливай, я занят\\.)"
+
+  - command: "/random Umputun Ksenks Gray Bobuk"
+    result: "(.+:\\s(Umputun|Ksenks|Gray|Bobuk))|(Чего надо\\? проваливай, я занят\\.)"
+
+  - command: "/random"
+    result: "(.+:\\s\\d+)|(Чего надо\\? проваливай, я занят\\.)"
+
+  - command: "/random 1"
+    result: "(.+:\\s1)|(Чего надо\\? проваливай, я занят\\.)"

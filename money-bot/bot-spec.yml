@@ -1,0 +1,16 @@
+bot_name: "money-bot"
+
+bot_display_name: "money-bot"
+
+defaults:
+  username: "test-user"
+  display_name: "Test User"
+  
+ignored_commands:
+  - "Ignored message 1"
+  - "Ignored message 2"
+  - "Ignored message 3"
+  
+test_cases:
+  - command: "а на digital ocean такой сервер стоит 5 евро"
+    result: ".+"

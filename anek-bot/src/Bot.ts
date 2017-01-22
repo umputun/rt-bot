@@ -23,13 +23,29 @@ export class Bot {
         return selectedChannel.getAnekdot().description;
     }
 
-    //TODO refactor to hasAllWords
     private hasTriggerPhrase(message: RequestData): boolean {
-        var text = message.text.toLowerCase();
-        if (text.indexOf('расскажи') != -1 && text.indexOf('анекдот') != -1) {
+
+        var greyCommands = ["!грей", "грей!", "!gray", "gray!"];
+        if (this.hasAnyWord(message, greyCommands)) {
             return true;
         }
+
+        if (this.hasAllWords(message, ["расскаж", "анекдот"])) {
+            return true;
+        }
+
         return false;
+    }
+
+    private hasAllWords(message: RequestData, words: string[]): boolean {
+        var text = message.text.toLowerCase();
+        for (var word of words) {
+            if (text.indexOf(word) == -1) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private hasAnyWord(message: RequestData, words: string[]): boolean {

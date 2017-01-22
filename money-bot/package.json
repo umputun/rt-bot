@@ -1,0 +1,13 @@
+{
+  "name": "money-bot",
+  "version": "0.1.0",
+  "private": false,
+  "dependencies": {
+    "body-parser": "~1.15.2",
+    "express": "~4.14.0",
+    "async": "~2.1.4",
+    "request": "~2.79.0",
+    "node-cron": "*",
+    "fs": "0.0.1-security"
+  }
+}

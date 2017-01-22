@@ -1,0 +1,7 @@
+timezone-bot:
+    build: .
+    container_name: timezone-bot
+    hostname: timezone-bot
+    restart: always
+    ports:
+        - "8080:8080"

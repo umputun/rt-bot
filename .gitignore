@@ -3,3 +3,5 @@ node_modules/
 *.pyc
 __pycache__
 etc/ssl/*
+.vscode
+docker-bot/radio-t-docker-bot.db

@@ -1,0 +1,8 @@
+version: '2'
+
+services:
+  bot-4-bots:
+    build: .
+    container_name: bot-4-bots_standalone
+    ports:
+    - "8080:8080"

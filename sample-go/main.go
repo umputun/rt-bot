@@ -18,8 +18,8 @@ type event struct {
 }
 
 type response struct {
-	Text string
-	Bot  string
+	Text string `json:"text"`
+	Bot  string `json:"bot"`
 }
 
 func main() {

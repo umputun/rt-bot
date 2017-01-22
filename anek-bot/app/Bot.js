@@ -18,18 +18,30 @@ var Bot = (function () {
         }
         return selectedChannel.getAnekdot().description;
     };
-    //TODO refactor to hasAllWords
     Bot.prototype.hasTriggerPhrase = function (message) {
-        var text = message.text.toLowerCase();
-        if (text.indexOf('расскажи') != -1 && text.indexOf('анекдот') != -1) {
+        var greyCommands = ["!грей", "грей!", "!gray", "gray!"];
+        if (this.hasAnyWord(message, greyCommands)) {
+            return true;
+        }
+        if (this.hasAllWords(message, ["расскаж", "анекдот"])) {
             return true;
         }
         return false;
     };
-    Bot.prototype.hasAnyWord = function (message, words) {
+    Bot.prototype.hasAllWords = function (message, words) {
         var text = message.text.toLowerCase();
         for (var _i = 0, words_1 = words; _i < words_1.length; _i++) {
             var word = words_1[_i];
+            if (text.indexOf(word) == -1) {
+                return false;
+            }
+        }
+        return true;
+    };
+    Bot.prototype.hasAnyWord = function (message, words) {
+        var text = message.text.toLowerCase();
+        for (var _i = 0, words_2 = words; _i < words_2.length; _i++) {
+            var word = words_2[_i];
             if (text.indexOf(word) != -1) {
                 return true;
             }

@@ -1,0 +1,7 @@
+tweet-bot:
+    build: .
+    container_name: tweet-bot
+    hostname: tweet-bot
+    restart: always
+    ports:
+        - "8080:8080"

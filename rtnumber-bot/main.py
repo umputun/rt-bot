@@ -18,6 +18,8 @@ last_update_timestamp = 0
 last_themes_num = 0
 last_podcast_num = 0
 
+last_response = None
+
 user_themes_posts = None
 user_themes_timestamp = 0
 
@@ -70,6 +72,7 @@ async def http_info(request):
 
 
 async def http_event(request):
+    global last_response
     try:
         input_json = await request.json()
     except json.decoder.JSONDecodeError:
@@ -102,22 +105,26 @@ async def http_event(request):
 
     if input_text.strip().lower() in ['время!', '!время']:
         weekday = dt.weekday()
-        if weekday == 5:
-            if dt.hour < 23:
-                min_until_rt = 23 * 60 - (dt.hour * 60 + dt.minute)
-                text = 'Трансляция должна начаться через %s' % hours_minutes_text(min_until_rt)
+        if last_response==None or (datetime.now() - last_response).seconds>45:
+            if weekday == 5:
+                if dt.hour < 23:
+                    min_until_rt = 23 * 60 - (dt.hour * 60 + dt.minute)
+                    text = 'Трансляция должна начаться через %s' % hours_minutes_text(min_until_rt)
+                else:
+                    min_after_rt = (dt.hour - 23) * 60 + dt.minute
+                    text = 'Трансляция должна идти уже %s' % hours_minutes_text(min_after_rt)
+            elif weekday == 6:
+                if dt.hour <= 2:
+                    min_after_rt = (dt.hour + 1) * 60 + dt.minute
+                    text = 'Трансляция должна идти уже %s' % hours_minutes_text(min_after_rt)
+                else:
+                    text = 'Трансляция должна была уже закончиться'
             else:
-                min_after_rt = (dt.hour - 23) * 60 + dt.minute
-                text = 'Трансляция должна идти уже %s' % hours_minutes_text(min_after_rt)
-        elif weekday == 6:
-            if dt.hour <= 2:
-                min_after_rt = (dt.hour + 1) * 60 + dt.minute
-                text = 'Трансляция должна идти уже %s' % hours_minutes_text(min_after_rt)
-            else:
-                text = 'Трансляция должна была уже закончиться'
+                text = 'Сегодня никакого Радио-Т'
         else:
-            text = 'Сегодня никакого Радио-Т'
+            text = 'Чуть меньше, чем когда спрашивали в прошлый раз.'
         output = {'text': text, 'bot': 'rtnumber-bot'}
+        last_response = datetime.now()
         return web.json_response(data=output, status=201)
 
     if input_text.strip().lower() in ['номер!', 'выпуск!', '!номер', '!выпуск']:

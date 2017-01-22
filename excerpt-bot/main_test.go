@@ -15,6 +15,7 @@ func TestLink(t *testing.T) {
 		{"blah http://radio-t.com/aa.gif blah2", "", true},
 		{"blah https://radio-t.com/aa.png blah2", "", true},
 		{"blah https://radio-t.com/png blah2", "https://radio-t.com/png", false},
+		{"blah https://twitter.com/radio_t/status/811670832510537730", "", true},
 	}
 
 	for _, tt := range tbl {

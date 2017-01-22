@@ -1,0 +1,25 @@
+defaults:
+  username: "test"
+  display_name: "Test"
+
+bot_name: "lucky"
+
+ignored_commands:
+  - "hello"
+  - "lucky"
+
+test_cases:
+  - command: 
+      text: "lucky start"
+      username: "umputun"
+    result: "Заявки на учатие в розыгрыше принимаются, пишем 'Хочу', голоса учитываются один раз"
+
+  - command: 
+      text: "хочу"
+      username: "test"
+    result: "Заявка от участника \"test\" принята!"
+
+  - command:
+      text: "lucky stop"
+      username: "umputun"
+    result: "Розыгрыш завершен, учавствовали 1. Наш победитель \"test\", поздравляем!"

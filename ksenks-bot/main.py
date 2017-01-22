@@ -227,8 +227,8 @@ async def main_loop(web_app):
             while True:
                 try:
                     current_date = datetime.now(tz=pytz.timezone('Europe/Moscow'))
-                    if (current_date.weekday() == 5 and current_date.hour >= 22) or \
-                            (current_date.weekday() == 6 and current_date.hour <= 4) or \
+                    if (current_date.weekday() == 5 and current_date.hour >= 23) or \
+                            (current_date.weekday() == 6 and current_date.hour <= 3) or \
                             (DEBUG_COMMANDS and DEBUG_IGNORE_TIME_UNTIL and time() < DEBUG_IGNORE_TIME_UNTIL):
                         async with session.get(STREAM_URL) as resp:
                             await process_stream(resp)

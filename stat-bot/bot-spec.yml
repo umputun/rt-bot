@@ -1,0 +1,14 @@
+bot_name: "stat-bot"
+
+ignored_commands:
+  - "Привет"
+
+test_cases:
+  - command: "Кто болтун?"
+    result: ".+"
+
+  - command: "Кто сегодня болтун?"
+    result: ".+"
+
+  - command: "О чем говорили?"
+    result: ".+"

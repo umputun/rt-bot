@@ -11,32 +11,37 @@
   (testing "Test GET /info"
     (let [response (request :get "/info" nil)]
       (is (= 200 (:status response)))
+      (is (= "application/json; charset=utf8" (get-in (:headers response) "Content-Type")))
       (is (str/starts-with? (:body response) "{\"author\":\"Alex 'SimY4' Simkin\",\"info\":\"Clojure REPL bot\",\"commands\":"))))
 
-  (testing "Test GET /healthcheck"
-    (let [response (request :get "/healthcheck" nil)]
-      (is (= 200 (:status response)))
-      (is (str/starts-with? (:body response) "{\"status\":\"OK\",\"statistics\":"))))
-
   (testing "Test POST /event should skip random messages with 417 code"
-    (is (= 417 (:status (request :post "/event" "random body"))))
-    (is (= 417 (:status (request :post "/event" {"text" "randon text"})))))
+    (let [response (request :post "/event" "random body")]
+      (is (= 417 (:status response)))
+      (is (= "application/json; charset=utf8" (get-in (:headers response) "Content-Type"))))
+    (let [response (request :post "/event" {"text" "randon text"})]
+      (is (= 417 (:status response)))
+      (is (= "application/json; charset=utf8" (get-in (:headers response) "Content-Type")))))
 
   (testing "Test POST /event should evaluate clojure commands and respond with 201 code"
     (let [response (request :post "/event" {"text" "clj> (+ 1 1)"})]
       (is (= 201 (:status response)))
+      (is (= "application/json; charset=utf8" (get-in (:headers response) "Content-Type")))
       (is (= "{\"text\":\"```\\n2\\n```\",\"bot\":\"REPL-bot\"}" (:body response))))
     (let [response (request :post "/event" {"text" "clj>"})]
       (is (= 201 (:status response)))
+      (is (= "application/json; charset=utf8" (get-in (:headers response) "Content-Type")))
       (is (= "{\"text\":\"```\\nEOF while reading\\n```\",\"bot\":\"REPL-bot\"}" (:body response))))
     (let [response (request :post "/event" {"text" "clj>(def var1 5)"})]
       (is (= 201 (:status response)))
+      (is (= "application/json; charset=utf8" (get-in (:headers response) "Content-Type")))
       (is (re-matches #"\{\"text\":\"```\\n#'sandbox[0-9]{1,4}/var1\\n```\",\"bot\":\"REPL-bot\"\}" (:body response))))
     (let [response (request :post "/event" {"text" "clj> (while true)"})]
       (is (= 201 (:status response)))
+      (is (= "application/json; charset=utf8" (get-in (:headers response) "Content-Type")))
       (is (= "{\"text\":\"```\\nEvaluation timed out in 5 seconds\\n```\",\"bot\":\"REPL-bot\"}" (:body response))))
     (let [response (request :post "/event" {"text" "clj> (+ var1 5)"})]
       (is (= 201 (:status response)))
+      (is (= "application/json; charset=utf8" (get-in (:headers response) "Content-Type")))
       (is (= "{\"text\":\"```\\n10\\n```\",\"bot\":\"REPL-bot\"}" (:body response)))))
 
   (testing "Test 404"

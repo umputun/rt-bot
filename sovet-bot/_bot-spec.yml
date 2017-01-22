@@ -1,0 +1,12 @@
+bot_name: "sovet-bot"
+bot_display_name: "советчик"
+
+ignored_commands:
+  - "Привет"
+
+test_cases:
+  - command: "совет"
+    result: ".+"
+
+  - command: "как жить?"
+    result: ".+"

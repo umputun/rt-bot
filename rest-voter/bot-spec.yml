@@ -1,0 +1,14 @@
+bot_name: "rest-voter"
+
+defaults:
+  username: "rest-voter"
+  display_name: "rest-voter"
+
+ignored_commands:
+  -  "Привет"
+  -  "время"
+  -  "Подскажите номер выпуска"
+
+test_cases:
+  - command: "!голосование кто станет презедентом? я, ты"
+    result: ".+"

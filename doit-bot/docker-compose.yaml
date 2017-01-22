@@ -1,0 +1,7 @@
+doit-bot:
+    build: .
+    container_name: doit-bot
+    hostname: doit-bot
+    restart: always
+    ports:
+        - "8080:8080"

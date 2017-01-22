@@ -11,4 +11,4 @@ test_cases:
     result: "^У меня для вас есть свежие факты про PHP."
 
   - command: "расскажи о php"
-    result: "^.*(PHP)?(php)?.*$"
+    result: ".+"

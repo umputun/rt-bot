@@ -1,0 +1,7 @@
+random-bot:
+    build: .
+    container_name: random-bot
+    hostname: random-bot
+    restart: always
+    ports:
+        - "8080:8080"

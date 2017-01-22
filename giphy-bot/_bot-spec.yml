@@ -1,0 +1,10 @@
+bot_name: "giphy-bot"
+bot_display_name: "Giphy"
+
+ignored_commands:
+  - "привет"
+  - "как дела?"
+
+test_cases:
+  - command: "giphy сиськи"
+    result: ".+"

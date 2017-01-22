@@ -12,7 +12,7 @@ namespace memberberries.Services
 
         private const string _author = "Andrey Popov";
 
-        private const string _info = "Шутливый бот **Вспоминашки** (MemberBerries) по мотивам сериала Южный Парк. Рагирует на фразы вида: `Помните то-то?`";
+        private const string _info = "Шутливый бот Вспоминашки (MemberBerries) по мотивам сериала Южный Парк. Реагирует на фразы вида: `Помните то-то?`";
 
         public Bot()
         {

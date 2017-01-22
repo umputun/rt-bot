@@ -7,7 +7,7 @@ services:
         hostname: nginx-bot
         restart: always
 
-        logging:
+        logging: &default_logging
           driver: json-file
           options:
               max-size: "10m"
@@ -30,8 +30,8 @@ services:
             - LE_FQDN=bot.radio-t.com
 
         depends_on:
-            - hello
             - memberberries
+            - hello
             - wiki-bot
             - search-bot
             - noter-bot
@@ -44,179 +44,123 @@ services:
             - gif-bot
             - stat-bot
             - anek-bot
-            - grabpage-bot
             - ksenks-bot
             - rtnumber-bot
             - excerpt-bot
+            - tweet-bot
+            - rest-voter
+            - hcalendar-bot
+            - timezone-bot
+            - doit-bot
+            - docker-bot
+            - money-bot
+            - random-bot
+            - bot-4-bots
+            - lucky
 
     hello:
         build: hello
-        image: "${DOCKER_REGISTRY_NAMESPACE}/hello-bot"
+        image: rtbot/hello-bot
         container_name: hello-bot
         hostname: hello-bot
         restart: always
-
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     memberberries:
         build: memberberries
-        image: "${DOCKER_REGISTRY_NAMESPACE}/memberberries"
+        image: rtbot/memberberries
         container_name: memberberries-bot
         hostname: memberberries-bot
         restart: always
-
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     wiki-bot:
         build: wiki-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/wiki-bot"
+        image: rtbot/wiki-bot
         container_name: wiki-bot
         hostname: wiki-bot
         restart: always
-
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     search-bot:
         build: search-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/search-bot"
+        image: rtbot/search-bot
         container_name: search-bot
         hostname: search-bot
         restart: always
-
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     noter-bot:
         build: noter-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/boter-bot"
+        image: rtbot/boter-bot
         container_name: noter-bot
         hostname: noter-bot
         restart: always
-
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     repl-bot:
         build: rt-repl-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/repl-bot"
+        image: rtbot/repl-bot
         container_name: repl-bot
         hostname: repl-bot
         restart: always
-
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     stat-bot:
         build: stat-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/stat-bot"
+        image: rtbot/stat-bot
         container_name: stat-bot
         hostname: stat-bot
         restart: always
-
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     gif-bot:
         build: gif-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/gif-bot"
+        image: rtbot/gif-bot
         container_name: gif-bot
         hostname: gif-bot
         restart: always
-
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     giphy-bot:
         build: giphy-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/giphy-bot"
+        image: rtbot/giphy-bot
         container_name: giphy-bot
         hostname: giphy-bot
         restart: always
-
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     5minphp-bot:
         build: 5minphp-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/5minphp-bot"
+        image: rtbot/5minphp-bot
         container_name: 5minphp-bot
         hostname: 5minphp-bot
         restart: always
-
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     loro-bot:
         build: loro-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/loro-bot"
+        image: rtbot/loro-bot
         container_name: loro-bot
         hostname: loro-bot
         restart: always
-
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     brackets-bot:
         build: brackets-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/brackets-bot"
+        image: rtbot/brackets-bot
         container_name: brackets-bot
         hostname: brackets-bot
         restart: always
-
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     guido-bot:
         build: guido-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/guido-bot"
+        image: rtbot/guido-bot
         container_name: guido-bot
         hostname: guido-bot
         restart: always
-
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     karma-bot-storage:
       image: redis:3-alpine
@@ -231,7 +175,7 @@ services:
 
     karma-bot:
         build: karma-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/karma-bot"
+        image: rtbot/karma-bot
         container_name: karma-bot
         hostname: karma-bot
         restart: always
@@ -239,82 +183,117 @@ services:
           - REDIS_HOST=karma-bot-storage
         depends_on:
           - karma-bot-storage
+        logging: *default_logging
 
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
-
-    sovet-bot:
-        build: sovet-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/sovet-bot"
-        container_name: sovet-bot
-        hostname: sovet-bot
+    hcalendar-bot:
+        build: hcalendar-bot
+        image: rtbot/hcalendar-bot
+        container_name: hcalendar-bot
+        hostname: hcalendar-bot
         restart: always
-
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     anek-bot:
         build: anek-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/anek-bot"
+        image: rtbot/anek-bot
         container_name: anek-bot
         hostname: anek-bot
         restart: always
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
-
-    grabpage-bot:
-        build: grabpage-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/grabpage-bot"
-        container_name: grabpage-bot
-        hostname: grabpage-bot
-        restart: always
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     ksenks-bot:
         build: ksenks-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/ksenks-bot"
+        image: rtbot/ksenks-bot
         container_name: ksenks-bot
         hostname: ksenks-bot
         restart: always
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     rtnumber-bot:
         build: rtnumber-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/rtnumber-bot"
+        image: rtbot/rtnumber-bot
         container_name: rtnumber-bot
         hostname: rtnumber-bot
         restart: always
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
 
     excerpt-bot:
         build: excerpt-bot
-        image: "${DOCKER_REGISTRY_NAMESPACE}/excerpt-bot"
+        image: rtbot/excerpt-bot
         container_name: excerpt-bot
         hostname: excerpt-bot
         restart: always
-        logging:
-          driver: json-file
-          options:
-              max-size: "10m"
-              max-file: "5"
+        logging: *default_logging
+
+    tweet-bot:
+        build: tweet-bot
+        image: rtbot/tweet-bot
+        container_name: tweet-bot
+        hostname: tweet-bot
+        restart: always
+        logging: *default_logging
+
+    rest-voter:
+        build: rest-voter
+        image: rtbot/rest-voter
+        container_name: rest-voter
+        hostname: rest-voter
+        restart: always
+        logging: *default_logging
+
+    timezone-bot:
+        build: timezone-bot
+        image: rtbot/timezone-bot
+        container_name: timezone-bot
+        hostname: timezone-bot
+        restart: always
+        logging: *default_logging
+
+    doit-bot:
+        build: doit-bot
+        image: rtbot/doit-bot
+        container_name: doit-bot
+        hostname: doit-bot
+        restart: always
+        logging: *default_logging
+
+    money-bot:
+        build: money-bot
+        image: rtbot/money-bot
+        container_name: money-bot
+        hostname: money-bot
+        restart: always
+        logging: *default_logging
+
+    docker-bot:
+        build: docker-bot
+        image: rtbot/docker-bot
+        container_name: docker-bot
+        hostname: docker-bot
+        restart: always
+        logging: *default_logging
+
+    random-bot:
+        build: random-bot
+        image: rtbot/random-bot
+        container_name: random-bot
+        hostname: random-bot
+        restart: always
+        logging: *default_logging
+
+    bot-4-bots:
+        build: bot-4-bots
+        image: rtbot/bot-4-bots
+        container_name: bot-4-bots
+        hostname: bot-4-bots
+        restart: always
+        logging: *default_logging
+
+    lucky:
+        build: lucky
+        image: rtbot/lucky
+        container_name: lucky
+        hostname: lucky
+        restart: always
+        logging: *default_logging
+

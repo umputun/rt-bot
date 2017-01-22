@@ -1,0 +1,8 @@
+bot_name: "hello"
+
+ignored_commands:
+  - "Как дела?"
+
+test_cases:
+  - command: "Привет"
+    result: ".+"

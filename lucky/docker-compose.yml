@@ -1,0 +1,7 @@
+lucky:
+    build: .
+    container_name: lucky
+    hostname: lucky
+    restart: always
+    ports:
+        - "8080:8080"

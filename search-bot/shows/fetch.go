@@ -61,10 +61,10 @@ func fetchShowsLinks(fromID int) ([]string, error) {
 			if ok, id := parseTitle(s.Text()); ok {
 				if fromID > 0 {
 					if id > fromID {
-						links = append(links, config.RadioTURL+url)
+						links = append(links, url)
 					}
 				} else {
-					links = append(links, config.RadioTURL+url)
+					links = append(links, url)
 				}
 			}
 		}

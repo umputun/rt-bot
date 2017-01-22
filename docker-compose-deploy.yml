@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+
+    deploy:
+        build: deploy
+        container_name: deploy
+        hostname: deploy
+        restart: always
+
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+        ports:
+            - 1443:443
+
+        environment:
+            - DEPLOY_USER
+            - DEPLOY_PASSWD
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - .:/srv/rt-bot
+            - ./docker-compose.yml:/srv/docker-compose.yml
+            - ./.env:/srv/.env

@@ -1,0 +1,13 @@
+bot_name: "bot-4-bots"
+bot_display_name: "bot-4-bots"
+
+ignored_commands:
+  - "Привет"
+  - "Как дела?"
+
+test_cases:
+  - command: "/bots summary"
+    result: ".+"
+
+  - command: "/сводка ботов"
+    result: ".+"
