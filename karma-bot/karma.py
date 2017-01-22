@@ -1,5 +1,8 @@
 import re
 import json
+from collections import OrderedDict
+import heapq
+
 import redis
 
 import settings
@@ -8,6 +11,7 @@ import settings
 KARMA_INCR = 1
 KARMA_DECR = 2
 KARMA_STAT = 3
+KARMA_TOP = 4
 
 KARMA_STAT_PATTERNS = (
     re.compile(r'^/?karma @?([\w_\-]+)\s*', re.IGNORECASE),
@@ -21,6 +25,10 @@ KARMA_INCR_PATTERNS = (
 KARMA_DECR_PATTERNS = (
     re.compile(r'^@?([\w_\-]+)\s*\-\-'),
     re.compile(r'^@?([\w_\-]+)\s*\,?\s*\-\s*1'),
+)
+KARMA_TOP_PATTERNS = (
+    re.compile(r'^/?karma-top (\d{1,3})\s*', re.IGNORECASE),
+    re.compile(r'^/?karma-top\s*', re.IGNORECASE),
 )
 
 
@@ -53,12 +61,14 @@ class KarmaCmd:
         '_parse_stat_cmd',
         '_parse_incr_cmd',
         '_parse_decr_cmd',
+        '_parse_top_cmd',
     ]
 
-    def __init__(self, type_, username):
+    def __init__(self, type_, username, args=None):
         self.type = type_
         self.username = username
         self.user_id = username.lower()
+        self.args = () if args is None else args
 
     @classmethod
     def _parse_stat_cmd(cls, message: Message):
@@ -86,6 +96,17 @@ class KarmaCmd:
                 return cls(KARMA_DECR, match.group(1))
 
     @classmethod
+    def _parse_top_cmd(cls, message: Message):
+        for regexp in KARMA_TOP_PATTERNS:
+            match = regexp.search(message.text)
+            if match:
+                try:
+                    count = int(match.group(1))
+                except IndexError:
+                    count = 10
+                return cls(KARMA_TOP, message.username, args=(count,))
+
+    @classmethod
     def from_message(cls, message: Message):
         """
         Get karma command or None if message isn't karma cmd
@@ -110,6 +131,7 @@ class KarmaApp:
             KARMA_INCR: self._process_incr,
             KARMA_DECR: self._process_decr,
             KARMA_STAT: self._process_stat,
+            KARMA_TOP: self._process_top,
         }
         if initial_data is not None:
             for username, value in initial_data.items():
@@ -126,6 +148,14 @@ class KarmaApp:
         if value is None:
             return 0
         return int(value)
+
+    def top(self, count=10):
+        lst = self.redis.hscan_iter('karma') 
+        results = heapq.nlargest(count, lst, key=lambda x: int(x[1]))
+        ret = OrderedDict()
+        for k, v in results:
+            ret[k.decode()] = int(v)
+        return ret
 
     def process_request(self, request):
         try:
@@ -173,3 +203,21 @@ class KarmaApp:
         return 'Карма пользователя @{}: {}.'.format(
             cmd.username, user_karma
         )
+
+    def _process_top(self, cmd, message):
+        top_count = cmd.args[0]
+
+        if top_count <= 0:
+            return 'Количество пользователей в /karma top [n] должно быть > 0.'
+
+        results = self.top(top_count)
+
+        if len(results) == 0:
+            return 'Статистика кармы пользователей пуста.'
+
+        message = 'Топ {} пользователей:\n\n'.format(len(results))
+        for k, v in results:
+            message += '- {}: {}\n'.format(k, v)
+            break
+
+        return message

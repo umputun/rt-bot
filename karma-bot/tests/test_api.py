@@ -29,6 +29,8 @@ class KarmaBotAPITestCase(unittest.TestCase):
                     'username-- (уменьшить карму пользователя)',
                     '/karma username (узнать карму пользователя)',
                     '/karma (узнать свою карму)',
+                    '/karma-top 100 (показать топ 100 пользователей)',
+                    '/karma-top (показать топ 10 пользователей)',
                 ],
             }
         )

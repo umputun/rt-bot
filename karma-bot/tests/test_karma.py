@@ -1,11 +1,12 @@
 import unittest
 from unittest.mock import patch
+from collections import OrderedDict
 
 from mockredis import mock_strict_redis_client
 
 from karma import (
     Message, KarmaCmd, KarmaApp,
-    KARMA_INCR, KARMA_DECR, KARMA_STAT
+    KARMA_INCR, KARMA_DECR, KARMA_STAT, KARMA_TOP
 )
 
 
@@ -146,6 +147,21 @@ class KarmaCmdTestCase(unittest.TestCase):
         self.assertEqual(cmd.type, KARMA_STAT)
         self.assertEqual(cmd.username, "foobar")
 
+    def test_from_top(self):
+        message = Message(username="joe", text="/karma-top",
+                          display_name="Joe")
+        cmd = KarmaCmd.from_message(message)
+        self.assertEqual(cmd.type, KARMA_TOP)
+        self.assertEqual(cmd.username, "joe")
+        self.assertEqual(cmd.args, (10,))
+
+        message = Message(username="joe2", text="/karma-top 100",
+                          display_name="Joe")
+        cmd = KarmaCmd.from_message(message)
+        self.assertEqual(cmd.type, KARMA_TOP)
+        self.assertEqual(cmd.username, "joe2")
+        self.assertEqual(cmd.args, (100,))
+
 
 class KarmaAppTestCase(unittest.TestCase):
 
@@ -183,3 +199,28 @@ class KarmaAppTestCase(unittest.TestCase):
         app.decr("joe")
         self.assertEqual(app.get("joe"), -3)
         self.assertEqual(app.get("joe2"), 0)
+
+    @patch('karma.redis.StrictRedis', mock_strict_redis_client)
+    def test_top(self):
+        app = KarmaApp({"joe": 5, "bob": 10, "alice": 7})
+        self.assertEqual(
+            app.top(10),
+            OrderedDict([
+                ['bob', 10],
+                ['alice', 7],
+                ['joe', 5],
+            ])
+        )
+        self.assertEqual(
+            app.top(2),
+            OrderedDict([
+                ['bob', 10],
+                ['alice', 7],
+            ])
+        )
+        self.assertEqual(
+            app.top(1),
+            OrderedDict([
+                ['bob', 10],
+            ])
+        )
