@@ -1,0 +1,7 @@
+or-bot:
+    build: .
+    container_name: or-bot
+    hostname: or-bot
+    restart: always
+    ports:
+        - "8080:8080"
