@@ -56,7 +56,7 @@ end_better_phrases = [
 def better_handler(text):
   _text = text.strip()
 
-  if (re.match(r"что лучше, ", _text) or re.match(r"кто лучше, ", _text)) and re.search(r"или", _text):
+  if (re.match(r"что лучше, ", _text) or re.match(r"кто лучше, ", _text)) and re.search(r" или ", _text):
     _text = _text[11:].strip()
 
     if _text[-1] == "?":
