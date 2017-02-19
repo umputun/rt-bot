@@ -57,6 +57,7 @@ services:
             - random-bot
             - bot-4-bots
             - lucky
+            - or-bot
 
     hello:
         build: hello
@@ -294,6 +295,14 @@ services:
         image: rtbot/lucky
         container_name: lucky
         hostname: lucky
+        restart: always
+        logging: *default_logging
+
+    or-bot:
+        build: or-bot
+        image: rtbot/or-bot
+        container_name: or-bot
+        hostname: or-bot
         restart: always
         logging: *default_logging
 
