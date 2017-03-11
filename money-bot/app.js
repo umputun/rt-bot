@@ -75,18 +75,6 @@ app.post('/event', function(req, res) {
             else callback(true);
         },
         function(v, c, callback){
-            if(~text.indexOf("сотень")) v = v + "00";
-            if(~text.indexOf("сотни")) v = v + "00";
-            if(~text.indexOf("тысяч")) v = v + "000";
-            if(~text.indexOf("тысячи")) v = v + "000";
-            if(~text.indexOf("милион")) v = v + "000000";
-            if(~text.indexOf("милионов")) v = v + "000000";
-            if(~text.indexOf("k")) v = v + "000";
-            if(~text.indexOf("к")) v = v + "000";
-            v = v.replace(/[^\d(,|\.)-]/g, '');
-            callback(null, v, c);
-        },
-        function(v, c, callback){
             let res_1 = 0,
                 res_2 = 0,
                 res_3 = 0,
