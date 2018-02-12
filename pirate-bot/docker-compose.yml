@@ -1,0 +1,7 @@
+brackets-bot:
+    build: .
+    container_name: pirate-bot
+    hostname: pirate-bot
+    restart: always
+    ports:
+        - "8080:8080"

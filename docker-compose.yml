@@ -58,6 +58,7 @@ services:
             - lucky
             - weather-bot
             - or-bot
+            - pirate-bot
 
     hello:
         build: hello
@@ -312,5 +313,13 @@ services:
         image: rtbot/or-bot
         container_name: or-bot
         hostname: or-bot
+        restart: always
+        logging: *default_logging
+
+    pirate-bot:
+        build: pirate-bot
+        image: rtbot/pirate-bot
+        container_name: pirate-bot
+        hostname: pirate-bot
         restart: always
         logging: *default_logging
