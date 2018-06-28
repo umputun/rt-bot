@@ -64,7 +64,10 @@ def get_last_tweet_id(username):
         if not requests_session:
             log.info('session not founded')
             requests_session = create_requests_session()
-        r = requests_session.get('https://twitter.com/%s/with_replies' % username, timeout=20)
+        url = 'https://twitter.com/%s/with_replies' % username
+        headers = {'Referer': url}
+        cookies = {'app_shell_visited': '1'}
+        r = requests_session.get(url, timeout=20, cookies=cookies, headers=headers)
         if is_login_page(r):
             log.warning('login page returned')
             requests_session = None
