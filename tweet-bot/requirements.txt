@@ -1,2 +1,2 @@
-aiohttp==1.1.3
-requests
+aiohttp==2.3.10
+tweepy==3.6.0

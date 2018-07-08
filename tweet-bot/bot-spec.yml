@@ -11,10 +11,10 @@ ignored_commands:
 
 test_cases:
   - command: "бобук!"
-    result: ".+"
-
-  - command: "!umputun"
-    result: ".+"
+    result: "^https:\\/\\/twitter\\.com\\/bobuk\\/status\\/\\d+$"
 
   - command: "!твит ksenks"
-    result: ".+"
+    result: "^https:\\/\\/twitter\\.com\\/ksenks\\/status\\/\\d+$"
+
+  - command: "!твит tweetbotrt"
+    result: "^https:\\/\\/twitter\\.com\\/tweetbotrt\\/status\\/1013416833884581888$"
